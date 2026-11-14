@@ -6,6 +6,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import co.com.buildinghabittracker.ui.detail.DetailScreen
+import co.com.buildinghabittracker.ui.habits.HabitFormScreen
 import co.com.buildinghabittracker.ui.habits.HabitsScreen
 import co.com.buildinghabittracker.ui.pin.PinScreen
 import co.com.buildinghabittracker.ui.recover.RecoverScreen
@@ -19,8 +20,10 @@ import co.com.buildinghabittracker.ui.today.TodayScreen
  * Las pantallas NO conocen al `navController`: reciben funciones como `onUnlocked` u `onBack`.
  * Así cada pantalla se puede probar sola, y toda la navegación queda en este archivo.
  *
- *   Arranque ─┬─► Registro ──► PIN ──► Hoy ──► Hábitos ──► Detalle
+ *   Arranque ─┬─► Registro ──► PIN ──► Hoy ──► Hábitos ──► Formulario (crear / editar)
  *             └─► PIN ──► Recuperar PIN ──► Hoy
+ *
+ * El Detalle existe pero todavía no tiene entrada: se conecta en la iteración 5.
  *
  * @param afterUnlock a dónde ir después del PIN: Hoy, o la pantalla donde estaba si la app
  * se bloqueó por estar 5 minutos en segundo plano (regla A5).
@@ -58,7 +61,19 @@ fun AppNavHost(
             TodayScreen(onOpenHabits = { navController.navigate(HabitsRoute) })
         }
         composable<HabitsRoute> {
-            HabitsScreen(onOpenHabit = { habitId -> navController.navigate(DetailRoute(habitId)) })
+            HabitsScreen(
+                onBack = { navController.popBackStack() },
+                onAddHabit = { navController.navigate(HabitFormRoute()) },
+                onEditHabit = { habitId -> navController.navigate(HabitFormRoute(habitId)) },
+            )
+        }
+        composable<HabitFormRoute> { backStackEntry ->
+            val route = backStackEntry.toRoute<HabitFormRoute>()
+            HabitFormScreen(
+                habitId = route.habitId,
+                onDone = { navController.popBackStack() },
+                onBack = { navController.popBackStack() },
+            )
         }
         composable<DetailRoute> { backStackEntry ->
             val route = backStackEntry.toRoute<DetailRoute>()

@@ -27,6 +27,10 @@ object TodayRoute
 @Serializable
 object HabitsRoute
 
+/** Formulario de hábito. `habitId = 0` crea uno nuevo; otro valor edita ese hábito. */
+@Serializable
+data class HabitFormRoute(val habitId: Long = 0L)
+
 /** Detalle de un hábito: necesita saber cuál, por eso lleva su id. */
 @Serializable
 data class DetailRoute(val habitId: Long)

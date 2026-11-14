@@ -45,13 +45,56 @@
     <string name="recover_confirm_pin_title">Confirma tu PIN nuevo</string>
     <string name="recover_new_pin_subtitle">Tus hábitos se conservan.</string>
 
-    <!-- Pantallas provisionales -->
+    <!-- Hoy y Detalle (provisionales) -->
     <string name="today_title">Hoy</string>
     <string name="today_description">La iteración 4 agrega los hábitos del día y el check-in.</string>
     <string name="today_open_habits">Mis hábitos</string>
+
+    <!-- Hábitos (C5) -->
     <string name="habits_title">Mis hábitos</string>
-    <string name="habits_description">La iteración 2 agrega crear, editar y archivar hábitos.</string>
-    <string name="habits_open_example">Abrir hábito de ejemplo</string>
+    <string name="habits_tab_active">Activos (%1$d)</string>
+    <string name="habits_tab_archived">Archivados (%1$d)</string>
+    <string name="habits_add">Nuevo hábito</string>
+    <string name="habits_empty_active">Todavía no tienes hábitos. Crea uno con el botón +</string>
+    <string name="habits_empty_archived">No tienes hábitos archivados.</string>
+    <string name="habits_unarchive">Desarchivar</string>
+    <string name="habits_unarchive_blocked">Ya tienes un hábito activo con ese título.</string>
+    <string name="habits_every_day">Todos los días</string>
+
+    <!-- Formulario de hábito (C1–C3, C5) -->
+    <string name="form_new_title">Nuevo hábito</string>
+    <string name="form_edit_title">Editar hábito</string>
+    <string name="form_title_label">Título</string>
+    <string name="form_description_label">Descripción (opcional)</string>
+    <string name="form_emoji_label">Emoji</string>
+    <string name="form_color_label">Color</string>
+    <string name="form_color_description">Color %1$d</string>
+    <string name="form_days_label">Días</string>
+    <string name="form_all_days">Todos los días</string>
+    <string name="form_clear_days">Quitar todos</string>
+    <string name="form_days_error">Elige al menos un día.</string>
+    <string name="form_save">Guardar</string>
+    <string name="form_archive">Archivar</string>
+    <string name="form_archive_dialog_title">¿Archivar “%1$s”?</string>
+    <string name="form_archive_dialog_text">Dejará de aparecer en Hoy y se cancelará su recordatorio. El historial se conserva y los días archivados cuentan como no hechos.</string>
+    <string name="common_cancel">Cancelar</string>
+    <string name="error_duplicate_title">Ya tienes un hábito activo con ese título.</string>
+
+    <!-- Días de la semana: letra corta y nombre completo (para lectores de pantalla) -->
+    <string name="day_short_monday">L</string>
+    <string name="day_short_tuesday">M</string>
+    <string name="day_short_wednesday">X</string>
+    <string name="day_short_thursday">J</string>
+    <string name="day_short_friday">V</string>
+    <string name="day_short_saturday">S</string>
+    <string name="day_short_sunday">D</string>
+    <string name="day_monday">lunes</string>
+    <string name="day_tuesday">martes</string>
+    <string name="day_wednesday">miércoles</string>
+    <string name="day_thursday">jueves</string>
+    <string name="day_friday">viernes</string>
+    <string name="day_saturday">sábado</string>
+    <string name="day_sunday">domingo</string>
     <string name="detail_title">Hábito #%1$d</string>
     <string name="detail_description">La iteración 5 agrega la racha, el cumplimiento y el calendario.</string>
 </resources>

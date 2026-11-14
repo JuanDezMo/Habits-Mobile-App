@@ -30,7 +30,7 @@ class TestTagsTest {
 
     @Test
     fun cada_identificador_empieza_con_el_nombre_de_su_pantalla() {
-        val screens = listOf("start_", "register_", "pin_", "recover_", "today_", "habits_", "detail_")
+        val screens = listOf("start_", "register_", "pin_", "recover_", "today_", "habits_", "form_", "detail_")
         val withoutScreen = TestTags.all.filterNot { tag -> screens.any { tag.startsWith(it) } }
         assertTrue(withoutScreen.isEmpty(), "Identificadores sin prefijo de pantalla: $withoutScreen")
     }

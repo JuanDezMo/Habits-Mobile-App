@@ -8,8 +8,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.foundation.layout.fillMaxWidth
-import co.com.buildinghabittracker.domain.auth.FieldError
+import co.com.buildinghabittracker.domain.common.FieldError
 import co.com.buildinghabittracker.resources.Res
+import co.com.buildinghabittracker.resources.error_duplicate_title
 import co.com.buildinghabittracker.resources.error_invalid_email
 import co.com.buildinghabittracker.resources.error_required
 import co.com.buildinghabittracker.resources.error_too_long
@@ -21,6 +22,7 @@ import org.jetbrains.compose.resources.stringResource
  *
  * @param error error de domain; aquí se convierte en el texto del idioma elegido.
  * @param minLength / maxLength se usan para armar mensajes como "Máximo 30 caracteres".
+ * @param singleLine `false` para textos largos, como la descripción de un hábito.
  */
 @Composable
 fun FormField(
@@ -34,12 +36,14 @@ fun FormField(
     minLength: Int = 0,
     maxLength: Int = 0,
     keyboardType: KeyboardType = KeyboardType.Text,
+    singleLine: Boolean = true,
 ) {
     OutlinedTextField(
         value = value,
         onValueChange = onValueChange,
         label = { Text(label) },
-        singleLine = true,
+        singleLine = singleLine,
+        minLines = if (singleLine) 1 else 2,
         isError = error != null,
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         supportingText = error?.let { fieldError ->
@@ -56,4 +60,5 @@ fun fieldErrorText(error: FieldError, minLength: Int, maxLength: Int): String = 
     FieldError.TOO_SHORT -> stringResource(Res.string.error_too_short, minLength)
     FieldError.TOO_LONG -> stringResource(Res.string.error_too_long, maxLength)
     FieldError.INVALID_EMAIL -> stringResource(Res.string.error_invalid_email)
+    FieldError.DUPLICATE -> stringResource(Res.string.error_duplicate_title)
 }

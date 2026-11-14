@@ -3,7 +3,7 @@ package co.com.buildinghabittracker.ui.register
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import co.com.buildinghabittracker.domain.auth.AnswerNormalizer
-import co.com.buildinghabittracker.domain.auth.FieldError
+import co.com.buildinghabittracker.domain.common.FieldError
 import co.com.buildinghabittracker.domain.auth.PinRules
 import co.com.buildinghabittracker.domain.auth.RegistrationRules
 import co.com.buildinghabittracker.domain.security.SecretHasher

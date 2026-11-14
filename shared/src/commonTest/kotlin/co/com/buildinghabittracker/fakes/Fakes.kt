@@ -1,9 +1,16 @@
 package co.com.buildinghabittracker.fakes
 
+import co.com.buildinghabittracker.domain.habit.Habit
+import co.com.buildinghabittracker.domain.habit.HabitRepository
 import co.com.buildinghabittracker.domain.security.SecretHasher
 import co.com.buildinghabittracker.domain.user.HashedSecret
 import co.com.buildinghabittracker.domain.user.User
 import co.com.buildinghabittracker.domain.user.UserRepository
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlin.time.Clock
 import kotlin.time.Duration
 import kotlin.time.Instant
@@ -50,4 +57,49 @@ fun sampleUser(
     failedAttempts = failedAttempts,
     lockedUntil = lockedUntil,
     createdAt = Instant.parse("2026-11-01T08:00:00Z"),
+)
+
+/**
+ * Guarda los hábitos en un `MutableStateFlow`, en memoria.
+ * Igual que Room, cada cambio emite la lista nueva a quien la esté observando.
+ */
+class FakeHabitRepository(initial: List<Habit> = emptyList()) : HabitRepository {
+    private val habits = MutableStateFlow(initial)
+    private var nextId = (initial.maxOfOrNull { it.id } ?: 0L) + 1
+
+    /** Lo guardado en este momento; las pruebas lo revisan directamente. */
+    val saved: List<Habit> get() = habits.value
+
+    override fun observeHabits(): Flow<List<Habit>> = habits
+
+    override suspend fun getHabit(id: Long): Habit? = habits.value.firstOrNull { it.id == id }
+
+    override suspend fun createHabit(habit: Habit): Long {
+        val id = nextId++
+        habits.update { it + habit.copy(id = id) }
+        return id
+    }
+
+    override suspend fun updateHabit(habit: Habit) =
+        habits.update { list -> list.map { if (it.id == habit.id) habit else it } }
+
+    override suspend fun setArchived(id: Long, archived: Boolean) =
+        habits.update { list -> list.map { if (it.id == id) it.copy(isArchived = archived) else it } }
+}
+
+/** Hábito de ejemplo: "Gym" lunes, miércoles y viernes. */
+fun sampleHabit(
+    id: Long = 1,
+    title: String = "Gym",
+    isArchived: Boolean = false,
+    days: Set<DayOfWeek> = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
+) = Habit(
+    id = id,
+    title = title,
+    description = "30 minutos de pesas",
+    emoji = "🏋️",
+    color = "#2E8B57",
+    days = days,
+    isArchived = isArchived,
+    createdAt = LocalDate(2026, 11, 1),
 )

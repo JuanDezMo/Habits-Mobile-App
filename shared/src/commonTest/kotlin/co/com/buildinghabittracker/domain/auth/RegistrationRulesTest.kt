@@ -1,5 +1,6 @@
 package co.com.buildinghabittracker.domain.auth
 
+import co.com.buildinghabittracker.domain.common.FieldError
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNull

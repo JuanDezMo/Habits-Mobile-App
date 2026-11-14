@@ -14,6 +14,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.compose.rememberNavController
 import co.com.buildinghabittracker.domain.auth.AppLock
 import co.com.buildinghabittracker.ui.navigation.AppNavHost
+import co.com.buildinghabittracker.ui.navigation.HabitFormRoute
 import co.com.buildinghabittracker.ui.navigation.HabitsRoute
 import co.com.buildinghabittracker.ui.navigation.PinRoute
 import co.com.buildinghabittracker.ui.navigation.TodayRoute
@@ -41,7 +42,8 @@ fun HabitApp() {
         ) {
             val navController = rememberNavController()
             val appLock: AppLock = koinInject()
-            // Pantalla a la que se vuelve después del PIN (Hoy, salvo que se haya bloqueado en Hábitos).
+            // Pantalla a la que se vuelve después del PIN: Hoy, o Hábitos si se bloqueó en la lista o
+            // en el formulario (lo que no se guardó en el formulario se pierde, igual que al cerrar la app).
             var resumeRoute: Any by remember { mutableStateOf(TodayRoute) }
 
             // A5: al ir a segundo plano se anota la hora; al volver, si pasaron 5 minutos, se pide el PIN.
@@ -49,7 +51,9 @@ fun HabitApp() {
             LifecycleEventEffect(Lifecycle.Event.ON_START) {
                 if (appLock.onAppForeground()) {
                     val current = navController.currentDestination
-                    resumeRoute = if (current?.hasRoute(HabitsRoute::class) == true) HabitsRoute else TodayRoute
+                    val inHabits = current?.hasRoute(HabitsRoute::class) == true ||
+                        current?.hasRoute(HabitFormRoute::class) == true
+                    resumeRoute = if (inHabits) HabitsRoute else TodayRoute
                     navController.navigateClearingHistory(PinRoute)
                 }
             }

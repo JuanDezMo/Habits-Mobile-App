@@ -1,6 +1,6 @@
 package co.com.buildinghabittracker.ui.register
 
-import co.com.buildinghabittracker.domain.auth.FieldError
+import co.com.buildinghabittracker.domain.common.FieldError
 import co.com.buildinghabittracker.fakes.FakeClock
 import co.com.buildinghabittracker.fakes.FakeSecretHasher
 import co.com.buildinghabittracker.fakes.FakeUserRepository

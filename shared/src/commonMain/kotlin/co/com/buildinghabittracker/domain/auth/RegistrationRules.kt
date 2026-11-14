@@ -1,12 +1,6 @@
 package co.com.buildinghabittracker.domain.auth
 
-/** Errores de validación del registro. La UI los traduce a un texto en el idioma elegido. */
-enum class FieldError {
-    REQUIRED,
-    TOO_SHORT,
-    TOO_LONG,
-    INVALID_EMAIL,
-}
+import co.com.buildinghabittracker.domain.common.FieldError
 
 /**
  * Reglas de los datos del registro (A2 y A4). Funciones puras: devuelven `null` si el

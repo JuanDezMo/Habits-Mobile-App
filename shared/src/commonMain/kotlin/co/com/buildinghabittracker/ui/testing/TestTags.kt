@@ -1,5 +1,7 @@
 package co.com.buildinghabittracker.ui.testing
 
+import kotlinx.datetime.DayOfWeek
+
 /**
  * Identificadores de prueba de TODA la app, en un solo lugar.
  *
@@ -53,9 +55,43 @@ object TestTags {
     const val TODAY_SCREEN = "today_screen"
     const val TODAY_HABITS_BUTTON = "today_habits_button"
 
-    // Hábitos
+    // Hábitos (C5)
     const val HABITS_SCREEN = "habits_screen"
-    const val HABITS_OPEN_EXAMPLE_BUTTON = "habits_open_example_button"
+    const val HABITS_BACK_BUTTON = "habits_back_button"
+    const val HABITS_TAB_ACTIVE = "habits_tab_active"
+    const val HABITS_TAB_ARCHIVED = "habits_tab_archived"
+    const val HABITS_ADD_BUTTON = "habits_add_button"
+    const val HABITS_EMPTY_TEXT = "habits_empty_text"
+    const val HABITS_UNARCHIVE_BLOCKED_TEXT = "habits_unarchive_blocked_text"
+
+    /** Fila de un hábito en la lista, por su id. Ejemplo: `habits_row_3`. */
+    fun habitsRow(habitId: Long) = "habits_row_$habitId"
+
+    /** Botón "Desarchivar" de un hábito archivado. Ejemplo: `habits_unarchive_3`. */
+    fun habitsUnarchive(habitId: Long) = "habits_unarchive_$habitId"
+
+    // Formulario de hábito: crear y editar (C1–C3), archivar (C5)
+    const val FORM_SCREEN = "form_screen"
+    const val FORM_BACK_BUTTON = "form_back_button"
+    const val FORM_TITLE_INPUT = "form_title_input"
+    const val FORM_TITLE_ERROR = "form_title_error"
+    const val FORM_DESCRIPTION_INPUT = "form_description_input"
+    const val FORM_DESCRIPTION_ERROR = "form_description_error"
+    const val FORM_ALL_DAYS_BUTTON = "form_all_days_button"
+    const val FORM_DAYS_ERROR = "form_days_error"
+    const val FORM_SAVE_BUTTON = "form_save_button"
+    const val FORM_ARCHIVE_BUTTON = "form_archive_button"
+    const val FORM_ARCHIVE_CONFIRM_BUTTON = "form_archive_confirm_button"
+    const val FORM_ARCHIVE_CANCEL_BUTTON = "form_archive_cancel_button"
+
+    /** Opción de emoji por su posición en la lista fija (no es dato del usuario). Ejemplo: `form_emoji_0`. */
+    fun formEmoji(index: Int) = "form_emoji_$index"
+
+    /** Opción de color por su posición en la lista fija. Ejemplo: `form_color_2`. */
+    fun formColor(index: Int) = "form_color_$index"
+
+    /** Botón de un día. Ejemplo: `form_day_monday`. */
+    fun formDay(day: DayOfWeek) = "form_day_${day.name.lowercase()}"
 
     // Detalle
     const val DETAIL_SCREEN = "detail_screen"
@@ -86,7 +122,12 @@ object TestTags {
         RECOVER_SCREEN, RECOVER_BACK_BUTTON, RECOVER_QUESTION_TEXT, RECOVER_ANSWER_INPUT,
         RECOVER_ERROR_TEXT, RECOVER_LOCK_TEXT, RECOVER_VERIFY_BUTTON, RECOVER_PIN_MISMATCH_TEXT,
         TODAY_SCREEN, TODAY_HABITS_BUTTON,
-        HABITS_SCREEN, HABITS_OPEN_EXAMPLE_BUTTON,
+        HABITS_SCREEN, HABITS_BACK_BUTTON, HABITS_TAB_ACTIVE, HABITS_TAB_ARCHIVED, HABITS_ADD_BUTTON,
+        HABITS_EMPTY_TEXT, HABITS_UNARCHIVE_BLOCKED_TEXT, habitsRow(1), habitsUnarchive(1),
+        FORM_SCREEN, FORM_BACK_BUTTON, FORM_TITLE_INPUT, FORM_TITLE_ERROR, FORM_DESCRIPTION_INPUT,
+        FORM_DESCRIPTION_ERROR, FORM_ALL_DAYS_BUTTON, FORM_DAYS_ERROR, FORM_SAVE_BUTTON,
+        FORM_ARCHIVE_BUTTON, FORM_ARCHIVE_CONFIRM_BUTTON, FORM_ARCHIVE_CANCEL_BUTTON,
         DETAIL_SCREEN, DETAIL_BACK_BUTTON,
-    ) + PinPad.entries.flatMap { pad -> (0..9).map { pad.key(it) } + pad.delete + pad.dots }
+    ) + PinPad.entries.flatMap { pad -> (0..9).map { pad.key(it) } + pad.delete + pad.dots } +
+        (0..11).map { formEmoji(it) } + (0..7).map { formColor(it) } + DayOfWeek.entries.map { formDay(it) }
 }
