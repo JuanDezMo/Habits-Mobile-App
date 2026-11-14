@@ -8,6 +8,7 @@ import co.com.buildinghabittracker.resources.detail_title
 import co.com.buildinghabittracker.ui.components.PlaceholderAction
 import co.com.buildinghabittracker.ui.components.PlaceholderScreen
 import co.com.buildinghabittracker.ui.testing.TestTags
+import co.com.buildinghabittracker.ui.theme.HabitPalette
 import org.jetbrains.compose.resources.stringResource
 
 /**
@@ -22,6 +23,7 @@ fun DetailScreen(habitId: Long, onBack: () -> Unit) {
         title = stringResource(Res.string.detail_title, habitId),
         description = stringResource(Res.string.detail_description),
         screenTestTag = TestTags.DETAIL_SCREEN,
+        lobeColor = HabitPalette.coral,
         actions = listOf(
             PlaceholderAction(stringResource(Res.string.common_back), TestTags.DETAIL_BACK_BUTTON, onBack),
         ),

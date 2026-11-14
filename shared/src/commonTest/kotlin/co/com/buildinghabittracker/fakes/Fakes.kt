@@ -3,6 +3,10 @@ package co.com.buildinghabittracker.fakes
 import co.com.buildinghabittracker.domain.habit.Habit
 import co.com.buildinghabittracker.domain.habit.HabitRepository
 import co.com.buildinghabittracker.domain.security.SecretHasher
+import co.com.buildinghabittracker.domain.settings.AppLanguage
+import co.com.buildinghabittracker.domain.settings.AppSettings
+import co.com.buildinghabittracker.domain.settings.AppTheme
+import co.com.buildinghabittracker.domain.settings.SettingsRepository
 import co.com.buildinghabittracker.domain.user.HashedSecret
 import co.com.buildinghabittracker.domain.user.User
 import co.com.buildinghabittracker.domain.user.UserRepository
@@ -103,3 +107,12 @@ fun sampleHabit(
     isArchived = isArchived,
     createdAt = LocalDate(2026, 11, 1),
 )
+
+/** Preferencias en memoria; emite cada cambio como DataStore. */
+class FakeSettingsRepository(initial: AppSettings = AppSettings()) : SettingsRepository {
+    private val state = MutableStateFlow(initial)
+    val current: AppSettings get() = state.value
+    override val settings: Flow<AppSettings> = state
+    override suspend fun setLanguage(language: AppLanguage) = state.update { it.copy(language = language) }
+    override suspend fun setTheme(theme: AppTheme) = state.update { it.copy(theme = theme) }
+}

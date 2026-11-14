@@ -27,6 +27,12 @@ object TodayRoute
 @Serializable
 object HabitsRoute
 
+@Serializable
+object SettingsRoute
+
+@Serializable
+object ChangePinRoute
+
 /** Formulario de hábito. `habitId = 0` crea uno nuevo; otro valor edita ese hábito. */
 @Serializable
 data class HabitFormRoute(val habitId: Long = 0L)

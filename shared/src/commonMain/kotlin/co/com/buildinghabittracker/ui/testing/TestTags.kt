@@ -51,13 +51,16 @@ object TestTags {
     const val RECOVER_VERIFY_BUTTON = "recover_verify_button"
     const val RECOVER_PIN_MISMATCH_TEXT = "recover_pin_mismatch_text"
 
+    // Barra inferior (Hoy / Hábitos / Ajustes)
+    const val NAV_TODAY = "nav_today"
+    const val NAV_HABITS = "nav_habits"
+    const val NAV_SETTINGS = "nav_settings"
+
     // Hoy
     const val TODAY_SCREEN = "today_screen"
-    const val TODAY_HABITS_BUTTON = "today_habits_button"
 
     // Hábitos (C5)
     const val HABITS_SCREEN = "habits_screen"
-    const val HABITS_BACK_BUTTON = "habits_back_button"
     const val HABITS_TAB_ACTIVE = "habits_tab_active"
     const val HABITS_TAB_ARCHIVED = "habits_tab_archived"
     const val HABITS_ADD_BUTTON = "habits_add_button"
@@ -93,6 +96,23 @@ object TestTags {
     /** Botón de un día. Ejemplo: `form_day_monday`. */
     fun formDay(day: DayOfWeek) = "form_day_${day.name.lowercase()}"
 
+    // Ajustes (G4, A8)
+    const val SETTINGS_SCREEN = "settings_screen"
+    const val SETTINGS_LANGUAGE_ES = "settings_language_es"
+    const val SETTINGS_LANGUAGE_EN = "settings_language_en"
+    const val SETTINGS_THEME_SYSTEM = "settings_theme_system"
+    const val SETTINGS_THEME_LIGHT = "settings_theme_light"
+    const val SETTINGS_THEME_DARK = "settings_theme_dark"
+    const val SETTINGS_CHANGE_PIN_BUTTON = "settings_change_pin_button"
+    const val SETTINGS_PIN_CHANGED_TEXT = "settings_pin_changed_text"
+
+    // Cambiar PIN (A8, A6)
+    const val CHANGEPIN_SCREEN = "changepin_screen"
+    const val CHANGEPIN_BACK_BUTTON = "changepin_back_button"
+    const val CHANGEPIN_ERROR_TEXT = "changepin_error_text"
+    const val CHANGEPIN_LOCK_TEXT = "changepin_lock_text"
+    const val CHANGEPIN_MISMATCH_TEXT = "changepin_mismatch_text"
+
     // Detalle
     const val DETAIL_SCREEN = "detail_screen"
     const val DETAIL_BACK_BUTTON = "detail_back_button"
@@ -104,7 +124,8 @@ object TestTags {
     enum class PinPad(val prefix: String) {
         LOGIN("pin"),
         REGISTER("register_pin"),
-        RECOVER("recover_pin");
+        RECOVER("recover_pin"),
+        CHANGE("changepin_pin");
 
         fun key(digit: Int) = "${prefix}_key_$digit"
         val delete get() = "${prefix}_delete"
@@ -121,12 +142,16 @@ object TestTags {
         PIN_SCREEN, PIN_ERROR_TEXT, PIN_LOCK_TEXT, PIN_FORGOT_BUTTON,
         RECOVER_SCREEN, RECOVER_BACK_BUTTON, RECOVER_QUESTION_TEXT, RECOVER_ANSWER_INPUT,
         RECOVER_ERROR_TEXT, RECOVER_LOCK_TEXT, RECOVER_VERIFY_BUTTON, RECOVER_PIN_MISMATCH_TEXT,
-        TODAY_SCREEN, TODAY_HABITS_BUTTON,
-        HABITS_SCREEN, HABITS_BACK_BUTTON, HABITS_TAB_ACTIVE, HABITS_TAB_ARCHIVED, HABITS_ADD_BUTTON,
+        NAV_TODAY, NAV_HABITS, NAV_SETTINGS,
+        TODAY_SCREEN,
+        HABITS_SCREEN, HABITS_TAB_ACTIVE, HABITS_TAB_ARCHIVED, HABITS_ADD_BUTTON,
         HABITS_EMPTY_TEXT, HABITS_UNARCHIVE_BLOCKED_TEXT, habitsRow(1), habitsUnarchive(1),
         FORM_SCREEN, FORM_BACK_BUTTON, FORM_TITLE_INPUT, FORM_TITLE_ERROR, FORM_DESCRIPTION_INPUT,
         FORM_DESCRIPTION_ERROR, FORM_ALL_DAYS_BUTTON, FORM_DAYS_ERROR, FORM_SAVE_BUTTON,
         FORM_ARCHIVE_BUTTON, FORM_ARCHIVE_CONFIRM_BUTTON, FORM_ARCHIVE_CANCEL_BUTTON,
+        SETTINGS_SCREEN, SETTINGS_LANGUAGE_ES, SETTINGS_LANGUAGE_EN, SETTINGS_THEME_SYSTEM, SETTINGS_THEME_LIGHT,
+        SETTINGS_THEME_DARK, SETTINGS_CHANGE_PIN_BUTTON, SETTINGS_PIN_CHANGED_TEXT,
+        CHANGEPIN_SCREEN, CHANGEPIN_BACK_BUTTON, CHANGEPIN_ERROR_TEXT, CHANGEPIN_LOCK_TEXT, CHANGEPIN_MISMATCH_TEXT,
         DETAIL_SCREEN, DETAIL_BACK_BUTTON,
     ) + PinPad.entries.flatMap { pad -> (0..9).map { pad.key(it) } + pad.delete + pad.dots } +
         (0..11).map { formEmoji(it) } + (0..7).map { formColor(it) } + DayOfWeek.entries.map { formDay(it) }

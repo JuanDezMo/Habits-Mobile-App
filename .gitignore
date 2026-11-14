@@ -1,0 +1,27 @@
+# Archivos que genera Gradle al compilar: se recrean solos, no van al repositorio.
+.gradle/
+.kotlin/
+build/
+**/build/
+
+# Configuración local de cada computador (ruta del SDK, etc.).
+local.properties
+
+# Android Studio / IntelliJ
+.idea/
+*.iml
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Xcode (iOS): datos de cada usuario y compilaciones.
+xcuserdata/
+DerivedData/
+*.xcuserstate
+iosApp/Pods/
+
+# Sistema operativo
+.DS_Store
+
+# Archivos de prueba que deja Maestro
+.maestro/screenshots/

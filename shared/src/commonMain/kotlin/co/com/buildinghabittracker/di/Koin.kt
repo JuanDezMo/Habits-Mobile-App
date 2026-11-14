@@ -4,16 +4,20 @@ import co.com.buildinghabittracker.data.local.AppDatabase
 import co.com.buildinghabittracker.data.local.buildAppDatabase
 import co.com.buildinghabittracker.data.habit.HabitRepositoryImpl
 import co.com.buildinghabittracker.data.security.Pbkdf2SecretHasher
+import co.com.buildinghabittracker.data.settings.DataStoreSettingsRepository
 import co.com.buildinghabittracker.data.user.UserRepositoryImpl
 import co.com.buildinghabittracker.domain.auth.AppLock
 import co.com.buildinghabittracker.domain.habit.HabitRepository
 import co.com.buildinghabittracker.domain.security.SecretHasher
+import co.com.buildinghabittracker.domain.settings.SettingsRepository
 import co.com.buildinghabittracker.domain.user.UserRepository
 import co.com.buildinghabittracker.ui.habits.HabitFormViewModel
 import co.com.buildinghabittracker.ui.habits.HabitsViewModel
 import co.com.buildinghabittracker.ui.pin.PinViewModel
 import co.com.buildinghabittracker.ui.recover.RecoverViewModel
 import co.com.buildinghabittracker.ui.register.RegisterViewModel
+import co.com.buildinghabittracker.ui.settings.ChangePinViewModel
+import co.com.buildinghabittracker.ui.settings.SettingsViewModel
 import co.com.buildinghabittracker.ui.start.StartViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -25,7 +29,8 @@ import kotlinx.datetime.TimeZone
 import kotlin.time.Clock
 
 /**
- * Lo que cambia según la plataforma. Cada una entrega aquí su `RoomDatabase.Builder`
+ * Lo que cambia según la plataforma. Cada una entrega aquí su `RoomDatabase.Builder`, el
+ * DataStore de preferencias y cómo leer el idioma del teléfono
  * (Android necesita el `Context`; iOS, la carpeta Documents).
  */
 expect val platformModule: Module
@@ -41,6 +46,7 @@ val dataModule = module {
     single { get<AppDatabase>().habitDao() }
     single<HabitRepository> { HabitRepositoryImpl(get()) }
     single<SecretHasher> { Pbkdf2SecretHasher() }
+    single<SettingsRepository> { DataStoreSettingsRepository(get()) }
     single<Clock> { Clock.System }
     single<TimeZone> { TimeZone.currentSystemDefault() }
     single { AppLock(get()) }
@@ -53,6 +59,8 @@ val viewModelModule = module {
     viewModelOf(::PinViewModel)
     viewModelOf(::RecoverViewModel)
     viewModelOf(::HabitsViewModel)
+    viewModelOf(::SettingsViewModel)
+    viewModelOf(::ChangePinViewModel)
     // El formulario necesita saber qué hábito editar: la pantalla le pasa el id como parámetro.
     viewModel { params -> HabitFormViewModel(habitId = params.get(), get(), get(), get()) }
 }

@@ -9,7 +9,7 @@ appId: co.com.buildinghabittracker
 name: "02 · Hábitos"
 ---
 - runFlow: subflows/registrar_y_entrar.yaml
-- tapOn: { id: "today_habits_button" }
+- tapOn: { id: "nav_habits" }
 - assertVisible: { id: "habits_empty_text" }
 
 # Escenario 1 · C1 y C3: no se guarda sin título ni sin días
@@ -98,6 +98,6 @@ name: "02 · Hábitos"
 - tapOn: { id: "pin_key_3" }
 - tapOn: { id: "pin_key_5" }
 - tapOn: { id: "pin_key_7" }
-- tapOn: { id: "today_habits_button" }
+- tapOn: { id: "nav_habits" }
 - assertVisible: { id: "habits_row_1" }
 - assertVisible: { id: "habits_row_2" }

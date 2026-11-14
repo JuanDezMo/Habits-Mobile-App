@@ -1,16 +1,7 @@
 package co.com.buildinghabittracker.ui.habits
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import co.com.buildinghabittracker.resources.Res
 import co.com.buildinghabittracker.resources.day_friday
 import co.com.buildinghabittracker.resources.day_monday
@@ -33,7 +24,7 @@ import org.jetbrains.compose.resources.stringResource
 
 /*
  * Piezas visuales que comparten la lista y el formulario de hábitos.
- * En la iteración 3 pasan al sistema de diseño.
+ * Los colores de hábito vienen de HabitValidator.COLORS (paleta del sistema "Mapa de parque").
  */
 
 /** "#2E8B57" → Color. Los colores vienen de la lista fija de HabitValidator.COLORS. */
@@ -75,16 +66,3 @@ fun daysLabel(days: Set<DayOfWeek>): String =
     } else {
         days.sortedBy { it.ordinal }.map { dayShortName(it) }.joinToString(" · ")
     }
-
-/** El emoji del hábito sobre un fondo suave de su color. */
-@Composable
-fun HabitEmoji(emoji: String, color: String, modifier: Modifier = Modifier) {
-    Box(
-        modifier = modifier
-            .size(44.dp)
-            .background(colorFromHex(color).copy(alpha = 0.22f), RoundedCornerShape(12.dp)),
-        contentAlignment = Alignment.Center,
-    ) {
-        Text(emoji, fontSize = 22.sp)
-    }
-}

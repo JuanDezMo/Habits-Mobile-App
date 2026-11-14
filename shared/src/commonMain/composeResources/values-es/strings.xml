@@ -11,6 +11,7 @@
     <string name="error_invalid_email">Escribe un email válido, por ejemplo ana@correo.com.</string>
 
     <!-- Registro (A1–A4) -->
+    <string name="register_step">Paso %1$d de %2$d</string>
     <string name="register_data_title">Crea tu cuenta</string>
     <string name="register_data_subtitle">Tus datos se guardan solo en este teléfono.</string>
     <string name="register_name_label">Nombre</string>
@@ -48,7 +49,6 @@
     <!-- Hoy y Detalle (provisionales) -->
     <string name="today_title">Hoy</string>
     <string name="today_description">La iteración 4 agrega los hábitos del día y el check-in.</string>
-    <string name="today_open_habits">Mis hábitos</string>
 
     <!-- Hábitos (C5) -->
     <string name="habits_title">Mis hábitos</string>
@@ -57,6 +57,8 @@
     <string name="habits_add">Nuevo hábito</string>
     <string name="habits_empty_active">Todavía no tienes hábitos. Crea uno con el botón +</string>
     <string name="habits_empty_archived">No tienes hábitos archivados.</string>
+    <string name="habits_summary">%1$d activos · %2$d archivados</string>
+    <string name="habits_archived_stamp">ARCHIVADO</string>
     <string name="habits_unarchive">Desarchivar</string>
     <string name="habits_unarchive_blocked">Ya tienes un hábito activo con ese título.</string>
     <string name="habits_every_day">Todos los días</string>
@@ -97,4 +99,26 @@
     <string name="day_sunday">domingo</string>
     <string name="detail_title">Hábito #%1$d</string>
     <string name="detail_description">La iteración 5 agrega la racha, el cumplimiento y el calendario.</string>
+
+    <!-- Barra inferior -->
+    <string name="nav_today">Hoy</string>
+    <string name="nav_habits">Hábitos</string>
+    <string name="nav_settings">Ajustes</string>
+
+    <!-- Ajustes (G4, A8) -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_subtitle">Se guardan en este teléfono.</string>
+    <string name="settings_language">Idioma</string>
+    <string name="settings_theme">Tema</string>
+    <string name="settings_theme_system">Teléfono</string>
+    <string name="settings_theme_light">Claro</string>
+    <string name="settings_theme_dark">Oscuro</string>
+    <string name="settings_security">Seguridad</string>
+    <string name="settings_change_pin">Cambiar PIN</string>
+    <string name="settings_pin_changed">PIN actualizado.</string>
+    <string name="changepin_current_title">Tu PIN actual</string>
+    <string name="changepin_current_subtitle">Escríbelo para poder cambiarlo.</string>
+    <string name="changepin_new_title">Crea tu PIN nuevo</string>
+    <string name="changepin_confirm_title">Confirma tu PIN nuevo</string>
+    <string name="changepin_new_subtitle">4 números que usarás para entrar.</string>
 </resources>

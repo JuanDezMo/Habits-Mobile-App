@@ -52,6 +52,7 @@ kotlin {
             implementation(libs.compose.foundation)
             implementation(libs.compose.ui)
             implementation(libs.compose.material3)
+            implementation(libs.compose.material.icons.core)
             implementation(libs.compose.components.resources)
             implementation(libs.compose.uiToolingPreview)
 
@@ -72,6 +73,7 @@ kotlin {
 
             implementation(libs.androidx.room.runtime)
             implementation(libs.androidx.sqlite.bundled)
+            implementation(libs.androidx.datastore.preferences)
         }
         androidMain.dependencies {
             implementation(libs.koin.android)

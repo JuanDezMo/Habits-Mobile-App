@@ -11,6 +11,7 @@
     <string name="error_invalid_email">Enter a valid email, for example ana@email.com.</string>
 
     <!-- Registro (A1–A4) -->
+    <string name="register_step">Step %1$d of %2$d</string>
     <string name="register_data_title">Create your account</string>
     <string name="register_data_subtitle">Your data stays on this phone only.</string>
     <string name="register_name_label">Name</string>
@@ -19,7 +20,7 @@
     <string name="register_create_pin_subtitle">4 digits you will use to open the app.</string>
     <string name="register_confirm_pin_title">Confirm your PIN</string>
     <string name="register_confirm_pin_subtitle">Enter it again.</string>
-    <string name="register_pin_mismatch">The PINs don\'t match. Create it again.</string>
+    <string name="register_pin_mismatch">The PINs don't match. Create it again.</string>
     <string name="register_security_title">Security question</string>
     <string name="register_security_subtitle">You will use it to create a new PIN if you forget yours.</string>
     <string name="register_question_label">Your question</string>
@@ -47,8 +48,7 @@
 
     <!-- Hoy y Detalle (provisionales) -->
     <string name="today_title">Today</string>
-    <string name="today_description">Iteration 4 adds today\'s habits and check-ins.</string>
-    <string name="today_open_habits">My habits</string>
+    <string name="today_description">Iteration 4 adds today's habits and check-ins.</string>
 
     <!-- Hábitos (C5) -->
     <string name="habits_title">My habits</string>
@@ -57,6 +57,8 @@
     <string name="habits_add">New habit</string>
     <string name="habits_empty_active">You have no habits yet. Create one with the + button</string>
     <string name="habits_empty_archived">You have no archived habits.</string>
+    <string name="habits_summary">%1$d active · %2$d archived</string>
+    <string name="habits_archived_stamp">ARCHIVED</string>
     <string name="habits_unarchive">Unarchive</string>
     <string name="habits_unarchive_blocked">You already have an active habit with that title.</string>
     <string name="habits_every_day">Every day</string>
@@ -97,4 +99,30 @@
     <string name="day_sunday">Sunday</string>
     <string name="detail_title">Habit #%1$d</string>
     <string name="detail_description">Iteration 5 adds streaks, completion rate and the calendar.</string>
+
+    <!-- Barra inferior -->
+    <string name="nav_today">Today</string>
+    <string name="nav_habits">Habits</string>
+    <string name="nav_settings">Settings</string>
+
+    <!-- Ajustes (G4, A8) -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_subtitle">Saved on this phone.</string>
+    <string name="settings_language">Language</string>
+    <string name="settings_theme">Theme</string>
+    <string name="settings_theme_system">Phone</string>
+    <string name="settings_theme_light">Light</string>
+    <string name="settings_theme_dark">Dark</string>
+    <string name="settings_security">Security</string>
+    <string name="settings_change_pin">Change PIN</string>
+    <string name="settings_pin_changed">PIN updated.</string>
+    <string name="changepin_current_title">Your current PIN</string>
+    <string name="changepin_current_subtitle">Enter it to change it.</string>
+    <string name="changepin_new_title">Create your new PIN</string>
+    <string name="changepin_confirm_title">Confirm your new PIN</string>
+    <string name="changepin_new_subtitle">4 digits you will use to sign in.</string>
+
+    <!-- Nombres de idioma: se escriben siempre en su propio idioma -->
+    <string name="language_spanish">Español</string>
+    <string name="language_english">English</string>
 </resources>

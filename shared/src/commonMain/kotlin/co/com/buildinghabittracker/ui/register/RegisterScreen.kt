@@ -1,20 +1,20 @@
 package co.com.buildinghabittracker.ui.register
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.Button
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +26,6 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import co.com.buildinghabittracker.domain.auth.RegistrationRules
 import co.com.buildinghabittracker.resources.Res
-import co.com.buildinghabittracker.resources.common_back
 import co.com.buildinghabittracker.resources.common_continue
 import co.com.buildinghabittracker.resources.register_answer_label
 import co.com.buildinghabittracker.resources.register_confirm_pin_subtitle
@@ -42,9 +41,16 @@ import co.com.buildinghabittracker.resources.register_pin_mismatch
 import co.com.buildinghabittracker.resources.register_question_label
 import co.com.buildinghabittracker.resources.register_security_subtitle
 import co.com.buildinghabittracker.resources.register_security_title
+import co.com.buildinghabittracker.resources.register_step
+import co.com.buildinghabittracker.ui.components.BackPill
 import co.com.buildinghabittracker.ui.components.FormField
+import co.com.buildinghabittracker.ui.components.Lobe
+import co.com.buildinghabittracker.ui.components.NoticePill
+import co.com.buildinghabittracker.ui.components.PillButton
 import co.com.buildinghabittracker.ui.components.PinPad
 import co.com.buildinghabittracker.ui.testing.TestTags
+import co.com.buildinghabittracker.ui.theme.HabitPalette
+import co.com.buildinghabittracker.ui.theme.ParkTheme
 import org.jetbrains.compose.resources.stringResource
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -80,6 +86,8 @@ fun RegisterScreen(
 /**
  * Pantalla de registro (sin estado): solo dibuja [state] y avisa los eventos.
  * Al no depender del ViewModel, se puede previsualizar y probar con cualquier estado.
+ *
+ * Diseño: lóbulo rosa con el paso y el título; debajo, los campos o el teclado.
  */
 @Composable
 fun RegisterContent(
@@ -94,38 +102,51 @@ fun RegisterContent(
     onFinish: () -> Unit,
     onBack: () -> Unit,
 ) {
+    val (title, subtitle) = when (state.step) {
+        RegisterStep.DATA -> Res.string.register_data_title to Res.string.register_data_subtitle
+        RegisterStep.CREATE_PIN -> Res.string.register_create_pin_title to Res.string.register_create_pin_subtitle
+        RegisterStep.CONFIRM_PIN -> Res.string.register_confirm_pin_title to Res.string.register_confirm_pin_subtitle
+        RegisterStep.SECURITY -> Res.string.register_security_title to Res.string.register_security_subtitle
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .safeDrawingPadding()
+            .background(ParkTheme.colors.water)
             .verticalScroll(rememberScrollState())
-            .padding(24.dp)
+            .navigationBarsPadding()
+            .imePadding()
             .testTag(TestTags.REGISTER_SCREEN),
-        verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            if (state.step != RegisterStep.DATA) {
-                TextButton(onClick = onBack, modifier = Modifier.testTag(TestTags.REGISTER_BACK_BUTTON)) {
-                    Text("← " + stringResource(Res.string.common_back))
+        Lobe(color = HabitPalette.pink) {
+            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                if (state.step != RegisterStep.DATA) {
+                    BackPill(
+                        onClick = onBack,
+                        containerColor = ParkTheme.colors.water,
+                        modifier = Modifier.testTag(TestTags.REGISTER_BACK_BUTTON),
+                    )
                 }
+                NoticePill(
+                    stringResource(Res.string.register_step, state.step.ordinal + 1, RegisterStep.entries.size),
+                    color = ParkTheme.colors.water,
+                )
+            }
+            Spacer(Modifier.height(22.dp))
+            Text(stringResource(title), style = MaterialTheme.typography.displaySmall, color = ParkTheme.colors.onAccent)
+            Spacer(Modifier.height(6.dp))
+            Text(stringResource(subtitle), style = MaterialTheme.typography.bodyMedium, color = ParkTheme.colors.onAccent)
+        }
+        Column(
+            modifier = Modifier.padding(horizontal = 18.dp, vertical = 8.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp),
+        ) {
+            when (state.step) {
+                RegisterStep.DATA -> DataStep(state, onNameChange, onEmailChange, onContinue)
+                RegisterStep.CREATE_PIN, RegisterStep.CONFIRM_PIN -> PinStep(state, onPinDigit, onPinDelete)
+                RegisterStep.SECURITY -> SecurityStep(state, onQuestionChange, onAnswerChange, onFinish)
             }
         }
-        LinearProgressIndicator(
-            progress = { (state.step.ordinal + 1) / RegisterStep.entries.size.toFloat() },
-            modifier = Modifier.fillMaxWidth().height(4.dp),
-        )
-        when (state.step) {
-            RegisterStep.DATA -> DataStep(state, onNameChange, onEmailChange, onContinue)
-            RegisterStep.CREATE_PIN, RegisterStep.CONFIRM_PIN -> PinStep(state, onPinDigit, onPinDelete)
-            RegisterStep.SECURITY -> SecurityStep(state, onQuestionChange, onAnswerChange, onFinish)
-        }
     }
-}
-
-@Composable
-private fun StepHeader(title: String, subtitle: String) {
-    Text(title, style = MaterialTheme.typography.headlineMedium)
-    Text(subtitle, style = MaterialTheme.typography.bodyLarge, color = MaterialTheme.colorScheme.onSurfaceVariant)
 }
 
 @Composable
@@ -135,7 +156,6 @@ private fun DataStep(
     onEmailChange: (String) -> Unit,
     onContinue: () -> Unit,
 ) {
-    StepHeader(stringResource(Res.string.register_data_title), stringResource(Res.string.register_data_subtitle))
     FormField(
         value = state.name,
         onValueChange = onNameChange,
@@ -155,23 +175,20 @@ private fun DataStep(
         maxLength = RegistrationRules.EMAIL_MAX,
         keyboardType = KeyboardType.Email,
     )
-    Button(onClick = onContinue, modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_CONTINUE_BUTTON)) {
-        Text(stringResource(Res.string.common_continue))
-    }
+    Spacer(Modifier.height(8.dp))
+    PillButton(
+        text = stringResource(Res.string.common_continue),
+        onClick = onContinue,
+        modifier = Modifier.testTag(TestTags.REGISTER_CONTINUE_BUTTON),
+    )
 }
 
 @Composable
 private fun PinStep(state: RegisterUiState, onPinDigit: (Char) -> Unit, onPinDelete: () -> Unit) {
-    if (state.step == RegisterStep.CREATE_PIN) {
-        StepHeader(stringResource(Res.string.register_create_pin_title), stringResource(Res.string.register_create_pin_subtitle))
-    } else {
-        StepHeader(stringResource(Res.string.register_confirm_pin_title), stringResource(Res.string.register_confirm_pin_subtitle))
-    }
     if (state.pinMismatch) {
-        Text(
+        NoticePill(
             stringResource(Res.string.register_pin_mismatch),
-            color = MaterialTheme.colorScheme.error,
-            modifier = Modifier.testTag(TestTags.REGISTER_PIN_MISMATCH_TEXT),
+            modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_PIN_MISMATCH_TEXT),
         )
     }
     PinPad(
@@ -189,7 +206,6 @@ private fun SecurityStep(
     onAnswerChange: (String) -> Unit,
     onFinish: () -> Unit,
 ) {
-    StepHeader(stringResource(Res.string.register_security_title), stringResource(Res.string.register_security_subtitle))
     FormField(
         value = state.question,
         onValueChange = onQuestionChange,
@@ -210,11 +226,11 @@ private fun SecurityStep(
         minLength = RegistrationRules.ANSWER_MIN,
         maxLength = RegistrationRules.ANSWER_MAX,
     )
-    Button(
+    Spacer(Modifier.height(8.dp))
+    PillButton(
+        text = stringResource(Res.string.register_finish),
         onClick = onFinish,
         enabled = !state.isSaving,
-        modifier = Modifier.fillMaxWidth().testTag(TestTags.REGISTER_FINISH_BUTTON),
-    ) {
-        Text(stringResource(Res.string.register_finish))
-    }
+        modifier = Modifier.testTag(TestTags.REGISTER_FINISH_BUTTON),
+    )
 }

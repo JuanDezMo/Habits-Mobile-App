@@ -24,7 +24,9 @@ object HabitValidator {
 
     /** C2: opciones del formulario. La primera de cada lista es el valor por defecto. */
     val EMOJIS = listOf("🏋️", "📖", "🧘", "🏃", "💧", "🥗", "😴", "✍️", "🎸", "🧹", "💊", "🌱")
-    val COLORS = listOf("#2E8B57", "#3A7BD5", "#D2691E", "#8E44AD", "#C9A227", "#C0392B", "#16A085", "#5D6D7E")
+    // Colores planos del sistema "Mapa de parque": coral, azul, lila, amarillo, verde, naranja, turquesa, rosa.
+    // Siempre llevan texto oscuro encima (contraste AA verificado).
+    val COLORS = listOf("#FF705D", "#2BA0FF", "#EBC1FF", "#F5E211", "#8ED462", "#FFA24C", "#3FD0B6", "#FF9FC8")
     val DEFAULT_EMOJI = EMOJIS.first()
     val DEFAULT_COLOR = COLORS.first()
 
