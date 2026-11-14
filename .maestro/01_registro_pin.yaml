@@ -1,0 +1,66 @@
+# Flujo E2E de la iteración 1: registro, entrada con PIN, error de PIN y recuperación.
+# Se ejecuta SOLO a demanda y después de validar con el equipo la ejecución y los escenarios.
+#   maestro test .maestro/01_registro_pin.yaml
+# Usa identificadores (no textos), así que funciona igual en español e inglés.
+appId: co.com.buildinghabittracker
+name: "01 · Registro y PIN"
+---
+# Escenario 1 · Registro completo (A1–A4) y llegada a la pantalla de PIN
+- launchApp:
+    clearState: true
+- assertVisible: { id: "register_screen" }
+- tapOn: { id: "register_name_input" }
+- inputText: "Ana"
+- tapOn: { id: "register_email_input" }
+- inputText: "ana@correo.com"
+- hideKeyboard
+- tapOn: { id: "register_continue_button" }
+- tapOn: { id: "register_pin_key_1" }
+- tapOn: { id: "register_pin_key_3" }
+- tapOn: { id: "register_pin_key_5" }
+- tapOn: { id: "register_pin_key_7" }
+- tapOn: { id: "register_pin_key_1" }
+- tapOn: { id: "register_pin_key_3" }
+- tapOn: { id: "register_pin_key_5" }
+- tapOn: { id: "register_pin_key_7" }
+- tapOn: { id: "register_question_input" }
+- inputText: "Nombre de mi primera mascota"
+- tapOn: { id: "register_answer_input" }
+- inputText: "Firulais"
+- hideKeyboard
+- tapOn: { id: "register_finish_button" }
+- assertVisible: { id: "pin_screen" }
+
+# Escenario 2 · PIN incorrecto muestra intentos restantes (A6)
+- tapOn: { id: "pin_key_0" }
+- tapOn: { id: "pin_key_0" }
+- tapOn: { id: "pin_key_0" }
+- tapOn: { id: "pin_key_0" }
+- assertVisible: { id: "pin_error_text" }
+
+# Escenario 3 · PIN correcto entra a Hoy
+- tapOn: { id: "pin_key_1" }
+- tapOn: { id: "pin_key_3" }
+- tapOn: { id: "pin_key_5" }
+- tapOn: { id: "pin_key_7" }
+- assertVisible: { id: "today_screen" }
+
+# Escenario 4 · Recuperar PIN con la pregunta de seguridad (A7)
+- stopApp
+- launchApp
+- assertVisible: { id: "pin_screen" }
+- tapOn: { id: "pin_forgot_button" }
+- assertVisible: { id: "recover_question_text" }
+- tapOn: { id: "recover_answer_input" }
+- inputText: "FIRULÁIS"
+- hideKeyboard
+- tapOn: { id: "recover_verify_button" }
+- tapOn: { id: "recover_pin_key_2" }
+- tapOn: { id: "recover_pin_key_4" }
+- tapOn: { id: "recover_pin_key_6" }
+- tapOn: { id: "recover_pin_key_8" }
+- tapOn: { id: "recover_pin_key_2" }
+- tapOn: { id: "recover_pin_key_4" }
+- tapOn: { id: "recover_pin_key_6" }
+- tapOn: { id: "recover_pin_key_8" }
+- assertVisible: { id: "today_screen" }

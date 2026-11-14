@@ -1,0 +1,27 @@
+# Flujo E2E de la iteración 0: la app abre y navega entre las pantallas provisionales.
+# Se ejecuta SOLO a demanda y después de validar con el equipo la ejecución y los escenarios.
+#   maestro test .maestro/00_arranque.yaml
+# Usa identificadores (no textos), así que funciona igual en español e inglés.
+appId: co.com.buildinghabittracker
+name: "00 · Arranque y navegación"
+---
+- launchApp:
+    clearState: true
+- assertVisible:
+    id: "pin_screen"
+- tapOn:
+    id: "pin_enter_button"
+- assertVisible:
+    id: "today_screen"
+- tapOn:
+    id: "today_habits_button"
+- assertVisible:
+    id: "habits_screen"
+- tapOn:
+    id: "habits_open_example_button"
+- assertVisible:
+    id: "detail_screen"
+- tapOn:
+    id: "detail_back_button"
+- assertVisible:
+    id: "habits_screen"

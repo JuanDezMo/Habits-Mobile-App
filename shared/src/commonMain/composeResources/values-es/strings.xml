@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos en ESPAÑOL. Cada clave debe existir también en values/strings.xml (inglés). -->
+<resources>
+    <string name="common_back">Volver</string>
+    <string name="common_continue">Continuar</string>
+
+    <!-- Errores de formulario -->
+    <string name="error_required">Este campo es obligatorio.</string>
+    <string name="error_too_short">Mínimo %1$d caracteres.</string>
+    <string name="error_too_long">Máximo %1$d caracteres.</string>
+    <string name="error_invalid_email">Escribe un email válido, por ejemplo ana@correo.com.</string>
+
+    <!-- Registro (A1–A4) -->
+    <string name="register_data_title">Crea tu cuenta</string>
+    <string name="register_data_subtitle">Tus datos se guardan solo en este teléfono.</string>
+    <string name="register_name_label">Nombre</string>
+    <string name="register_email_label">Email</string>
+    <string name="register_create_pin_title">Crea tu PIN</string>
+    <string name="register_create_pin_subtitle">4 números que usarás para entrar.</string>
+    <string name="register_confirm_pin_title">Confirma tu PIN</string>
+    <string name="register_confirm_pin_subtitle">Escríbelo otra vez.</string>
+    <string name="register_pin_mismatch">Los PIN no coinciden. Créalo de nuevo.</string>
+    <string name="register_security_title">Pregunta de seguridad</string>
+    <string name="register_security_subtitle">Te servirá para crear un PIN nuevo si lo olvidas.</string>
+    <string name="register_question_label">Tu pregunta</string>
+    <string name="register_answer_label">Respuesta</string>
+    <string name="register_finish">Crear cuenta</string>
+
+    <!-- PIN (A5, A6) -->
+    <string name="pin_greeting">Hola, %1$s</string>
+    <string name="pin_subtitle">Ingresa tu PIN</string>
+    <string name="pin_attempts_left">PIN incorrecto. Intentos antes del bloqueo: %1$d</string>
+    <string name="pin_locked">Demasiados intentos. Intenta de nuevo en %1$s.</string>
+    <string name="pin_forgot">Olvidé mi PIN</string>
+    <string name="pin_delete">Borrar</string>
+    <string name="pin_dots_description">%1$d de %2$d dígitos ingresados</string>
+
+    <!-- Recuperar PIN (A7) -->
+    <string name="recover_title">Recuperar PIN</string>
+    <string name="recover_subtitle">Responde tu pregunta de seguridad.</string>
+    <string name="recover_answer_label">Respuesta</string>
+    <string name="recover_verify">Verificar</string>
+    <string name="recover_wrong_answer">Respuesta incorrecta. Intentos antes del bloqueo: %1$d</string>
+    <string name="recover_new_pin_title">Crea un PIN nuevo</string>
+    <string name="recover_confirm_pin_title">Confirma tu PIN nuevo</string>
+    <string name="recover_new_pin_subtitle">Tus hábitos se conservan.</string>
+
+    <!-- Pantallas provisionales -->
+    <string name="today_title">Hoy</string>
+    <string name="today_description">La iteración 4 agrega los hábitos del día y el check-in.</string>
+    <string name="today_open_habits">Mis hábitos</string>
+    <string name="habits_title">Mis hábitos</string>
+    <string name="habits_description">La iteración 2 agrega crear, editar y archivar hábitos.</string>
+    <string name="habits_open_example">Abrir hábito de ejemplo</string>
+    <string name="detail_title">Hábito #%1$d</string>
+    <string name="detail_description">La iteración 5 agrega la racha, el cumplimiento y el calendario.</string>
+</resources>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Textos en INGLÉS. Es el idioma por defecto: se usa cuando el idioma elegido no es español (regla G1). -->
+<resources>
+    <string name="common_back">Back</string>
+    <string name="common_continue">Continue</string>
+
+    <!-- Errores de formulario -->
+    <string name="error_required">This field is required.</string>
+    <string name="error_too_short">Minimum %1$d characters.</string>
+    <string name="error_too_long">Maximum %1$d characters.</string>
+    <string name="error_invalid_email">Enter a valid email, for example ana@email.com.</string>
+
+    <!-- Registro (A1–A4) -->
+    <string name="register_data_title">Create your account</string>
+    <string name="register_data_subtitle">Your data stays on this phone only.</string>
+    <string name="register_name_label">Name</string>
+    <string name="register_email_label">Email</string>
+    <string name="register_create_pin_title">Create your PIN</string>
+    <string name="register_create_pin_subtitle">4 digits you will use to open the app.</string>
+    <string name="register_confirm_pin_title">Confirm your PIN</string>
+    <string name="register_confirm_pin_subtitle">Enter it again.</string>
+    <string name="register_pin_mismatch">The PINs don\'t match. Create it again.</string>
+    <string name="register_security_title">Security question</string>
+    <string name="register_security_subtitle">You will use it to create a new PIN if you forget yours.</string>
+    <string name="register_question_label">Your question</string>
+    <string name="register_answer_label">Answer</string>
+    <string name="register_finish">Create account</string>
+
+    <!-- PIN (A5, A6) -->
+    <string name="pin_greeting">Hi, %1$s</string>
+    <string name="pin_subtitle">Enter your PIN</string>
+    <string name="pin_attempts_left">Incorrect PIN. Attempts left before lockout: %1$d</string>
+    <string name="pin_locked">Too many attempts. Try again in %1$s.</string>
+    <string name="pin_forgot">Forgot my PIN</string>
+    <string name="pin_delete">Delete</string>
+    <string name="pin_dots_description">%1$d of %2$d digits entered</string>
+
+    <!-- Recuperar PIN (A7) -->
+    <string name="recover_title">Recover PIN</string>
+    <string name="recover_subtitle">Answer your security question.</string>
+    <string name="recover_answer_label">Answer</string>
+    <string name="recover_verify">Verify</string>
+    <string name="recover_wrong_answer">Incorrect answer. Attempts left before lockout: %1$d</string>
+    <string name="recover_new_pin_title">Create a new PIN</string>
+    <string name="recover_confirm_pin_title">Confirm your new PIN</string>
+    <string name="recover_new_pin_subtitle">Your habits are kept.</string>
+
+    <!-- Pantallas provisionales -->
+    <string name="today_title">Today</string>
+    <string name="today_description">Iteration 4 adds today\'s habits and check-ins.</string>
+    <string name="today_open_habits">My habits</string>
+    <string name="habits_title">My habits</string>
+    <string name="habits_description">Iteration 2 adds creating, editing and archiving habits.</string>
+    <string name="habits_open_example">Open example habit</string>
+    <string name="detail_title">Habit #%1$d</string>
+    <string name="detail_description">Iteration 5 adds streaks, completion rate and the calendar.</string>
+</resources>

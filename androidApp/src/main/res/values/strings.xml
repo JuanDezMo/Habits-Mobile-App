@@ -1,0 +1,4 @@
+<resources>
+    <!-- Nombre provisional: el nombre visible definitivo se define en la iteración 3. -->
+    <string name="app_name">Habit Tracker</string>
+</resources>

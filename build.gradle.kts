@@ -1,0 +1,12 @@
+// Declara los plugins una sola vez para todo el proyecto (`apply false`).
+// Cada módulo decide después cuáles aplica.
+plugins {
+    alias(libs.plugins.androidApplication) apply false
+    alias(libs.plugins.androidMultiplatformLibrary) apply false
+    alias(libs.plugins.composeCompiler) apply false
+    alias(libs.plugins.composeMultiplatform) apply false
+    alias(libs.plugins.kotlinMultiplatform) apply false
+    alias(libs.plugins.kotlinxSerialization) apply false
+    alias(libs.plugins.ksp) apply false
+    alias(libs.plugins.room) apply false
+}
