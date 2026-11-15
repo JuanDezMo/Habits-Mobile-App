@@ -20,7 +20,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,6 +49,7 @@ import co.com.buildinghabittracker.resources.settings_theme_light
 import co.com.buildinghabittracker.resources.settings_theme_system
 import co.com.buildinghabittracker.resources.settings_title
 import co.com.buildinghabittracker.ui.components.Lobe
+import co.com.buildinghabittracker.ui.components.ParkSnackbarHost
 import co.com.buildinghabittracker.ui.components.PillTab
 import co.com.buildinghabittracker.ui.components.PillTabs
 import co.com.buildinghabittracker.ui.components.RoundChip
@@ -168,7 +168,7 @@ fun SettingsContent(
                 }
             }
         }
-        SnackbarHost(
+        ParkSnackbarHost(
             snackbarHostState,
             modifier = Modifier
                 .align(Alignment.BottomCenter)

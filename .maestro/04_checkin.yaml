@@ -1,0 +1,43 @@
+# Flujo E2E de la iteración 4: Hoy y check-in (D1–D3, E1, E2).
+# Se ejecuta SOLO a demanda y después de validar con el equipo la ejecución y los escenarios.
+#   maestro test .maestro/04_checkin.yaml
+# Usa identificadores; el único texto es la acción del aviso ("Deshacer" / "Undo"), que no tiene id propio.
+# La sección "Ayer" no se prueba aquí: necesita un hábito creado antes de hoy. La cubren las
+# pruebas unitarias de TodayViewModel.
+appId: co.com.buildinghabittracker
+name: "04 · Hoy y check-in"
+---
+- runFlow: subflows/registrar_y_entrar.yaml
+
+# Escenario 1 · Sin hábitos: Hoy invita a crear el primero
+- assertVisible: { id: "today_empty_text" }
+- tapOn: { id: "today_create_habit_button" }
+- tapOn: { id: "form_title_input" }
+- inputText: "Leer"
+- hideKeyboard
+- scrollUntilVisible: { element: { id: "form_save_button" }, centerElement: true }
+- tapOn: { id: "form_save_button" }        # el formulario empieza con todos los días
+
+# Escenario 2 · El hábito aparece en Hoy sin marcar
+- assertVisible: { id: "today_habit_1", checked: false }
+- assertVisible: { id: "today_progress_text" }
+- assertVisible: { id: "today_notice_text" }
+
+# Escenario 3 · D2 y E1: marcar con un toque en la cápsula; la racha sube a 1
+- tapOn: { id: "today_habit_1" }
+- assertVisible: { id: "today_habit_1", checked: true }
+- assertVisible: "🔥 1.*"
+
+# Escenario 4 · D3: desmarcar muestra el aviso y "Deshacer" lo vuelve a marcar
+- tapOn: { id: "today_habit_1" }
+- assertVisible: { id: "today_habit_1", checked: false }
+- assertVisible: { id: "today_undo_snackbar" }
+- tapOn: "Deshacer|Undo"
+- assertVisible: { id: "today_habit_1", checked: true }
+
+# Escenario 5 · El aviso no reaparece al cambiar de pestaña
+- tapOn: { id: "today_habit_1" }
+- tapOn: { id: "nav_habits" }
+- tapOn: { id: "nav_today" }
+- assertNotVisible: "Deshacer|Undo"
+- assertVisible: { id: "today_habit_1", checked: false }

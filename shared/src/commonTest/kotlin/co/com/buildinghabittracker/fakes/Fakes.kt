@@ -1,5 +1,8 @@
 package co.com.buildinghabittracker.fakes
 
+import co.com.buildinghabittracker.domain.checkin.CheckIn
+import co.com.buildinghabittracker.domain.checkin.CheckInRepository
+import co.com.buildinghabittracker.domain.common.TodayProvider
 import co.com.buildinghabittracker.domain.habit.Habit
 import co.com.buildinghabittracker.domain.habit.HabitRepository
 import co.com.buildinghabittracker.domain.security.SecretHasher
@@ -97,6 +100,7 @@ fun sampleHabit(
     title: String = "Gym",
     isArchived: Boolean = false,
     days: Set<DayOfWeek> = setOf(DayOfWeek.MONDAY, DayOfWeek.WEDNESDAY, DayOfWeek.FRIDAY),
+    createdAt: LocalDate = LocalDate(2026, 11, 1),
 ) = Habit(
     id = id,
     title = title,
@@ -105,7 +109,7 @@ fun sampleHabit(
     color = "#2E8B57",
     days = days,
     isArchived = isArchived,
-    createdAt = LocalDate(2026, 11, 1),
+    createdAt = createdAt,
 )
 
 /** Preferencias en memoria; emite cada cambio como DataStore. */
@@ -115,4 +119,27 @@ class FakeSettingsRepository(initial: AppSettings = AppSettings()) : SettingsRep
     override val settings: Flow<AppSettings> = state
     override suspend fun setLanguage(language: AppLanguage) = state.update { it.copy(language = language) }
     override suspend fun setTheme(theme: AppTheme) = state.update { it.copy(theme = theme) }
+}
+
+/**
+ * Check-ins en memoria. Igual que la tabla real, no guarda dos del mismo hábito el mismo día (D2).
+ */
+class FakeCheckInRepository(initial: List<CheckIn> = emptyList()) : CheckInRepository {
+    private val checkIns = MutableStateFlow(initial)
+    val saved: List<CheckIn> get() = checkIns.value
+
+    override fun observeCheckIns(): Flow<List<CheckIn>> = checkIns
+
+    override suspend fun add(checkIn: CheckIn) = checkIns.update { list ->
+        if (list.any { it.habitId == checkIn.habitId && it.date == checkIn.date }) list else list + checkIn
+    }
+
+    override suspend fun remove(habitId: Long, date: LocalDate) =
+        checkIns.update { list -> list.filterNot { it.habitId == habitId && it.date == date } }
+}
+
+/** "Hoy" que la prueba cambia a mano, por ejemplo para pasar la medianoche. */
+class FakeTodayProvider(today: LocalDate) : TodayProvider {
+    val today = MutableStateFlow(today)
+    override fun observeToday(): Flow<LocalDate> = today
 }

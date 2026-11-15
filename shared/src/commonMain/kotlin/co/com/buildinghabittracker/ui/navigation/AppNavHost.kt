@@ -79,7 +79,8 @@ fun AppNavHost(
                 )
             }
             composable<TodayRoute> {
-                TodayScreen()
+                // Sin hábitos, Hoy ofrece "Crear mi primer hábito".
+                TodayScreen(onCreateHabit = { navController.navigate(HabitFormRoute()) })
             }
             composable<HabitsRoute> {
                 HabitsScreen(

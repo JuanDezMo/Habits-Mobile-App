@@ -56,8 +56,20 @@ object TestTags {
     const val NAV_HABITS = "nav_habits"
     const val NAV_SETTINGS = "nav_settings"
 
-    // Hoy
+    // Hoy (D1–D3, E1, E2)
     const val TODAY_SCREEN = "today_screen"
+    const val TODAY_PROGRESS_TEXT = "today_progress_text"
+    const val TODAY_NOTICE_TEXT = "today_notice_text"
+    const val TODAY_EMPTY_TEXT = "today_empty_text"
+    const val TODAY_CREATE_HABIT_BUTTON = "today_create_habit_button"
+    const val TODAY_YESTERDAY_LABEL = "today_yesterday_label"
+    const val TODAY_UNDO_SNACKBAR = "today_undo_snackbar"
+
+    /** Cápsula de un hábito de hoy; tocarla marca o desmarca. Ejemplo: `today_habit_3`. */
+    fun todayHabit(habitId: Long) = "today_habit_$habitId"
+
+    /** Cápsula de un hábito en la sección "Ayer". Ejemplo: `today_yesterday_habit_3`. */
+    fun todayYesterdayHabit(habitId: Long) = "today_yesterday_habit_$habitId"
 
     // Hábitos (C5)
     const val HABITS_SCREEN = "habits_screen"
@@ -143,7 +155,8 @@ object TestTags {
         RECOVER_SCREEN, RECOVER_BACK_BUTTON, RECOVER_QUESTION_TEXT, RECOVER_ANSWER_INPUT,
         RECOVER_ERROR_TEXT, RECOVER_LOCK_TEXT, RECOVER_VERIFY_BUTTON, RECOVER_PIN_MISMATCH_TEXT,
         NAV_TODAY, NAV_HABITS, NAV_SETTINGS,
-        TODAY_SCREEN,
+        TODAY_SCREEN, TODAY_PROGRESS_TEXT, TODAY_NOTICE_TEXT, TODAY_EMPTY_TEXT, TODAY_CREATE_HABIT_BUTTON,
+        TODAY_YESTERDAY_LABEL, TODAY_UNDO_SNACKBAR, todayHabit(1), todayYesterdayHabit(1),
         HABITS_SCREEN, HABITS_TAB_ACTIVE, HABITS_TAB_ARCHIVED, HABITS_ADD_BUTTON,
         HABITS_EMPTY_TEXT, HABITS_UNARCHIVE_BLOCKED_TEXT, habitsRow(1), habitsUnarchive(1),
         FORM_SCREEN, FORM_BACK_BUTTON, FORM_TITLE_INPUT, FORM_TITLE_ERROR, FORM_DESCRIPTION_INPUT,

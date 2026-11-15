@@ -46,9 +46,7 @@
     <string name="recover_confirm_pin_title">Confirm your new PIN</string>
     <string name="recover_new_pin_subtitle">Your habits are kept.</string>
 
-    <!-- Hoy y Detalle (provisionales) -->
-    <string name="today_title">Today</string>
-    <string name="today_description">Iteration 4 adds today's habits and check-ins.</string>
+    <!-- Detalle (provisional) -->
 
     <!-- Hábitos (C5) -->
     <string name="habits_title">My habits</string>
@@ -125,4 +123,37 @@
     <!-- Nombres de idioma: se escriben siempre en su propio idioma -->
     <string name="language_spanish">Español</string>
     <string name="language_english">English</string>
+
+    <!-- Hoy (D1–D3, E1, E2) -->
+    <string name="today_date">%1$s, %3$s %2$d</string>
+    <string name="today_progress_of">of %1$d</string>
+    <string name="today_missing_one">Still to do: %1$s</string>
+    <string name="today_missing_many">%1$d habits left today</string>
+    <string name="today_all_done">All done for today!</string>
+    <string name="today_nothing_scheduled">Nothing scheduled today. Enjoy the rest!</string>
+    <string name="today_empty">Your habits for today will show up here</string>
+    <string name="today_create_first">Create my first habit</string>
+    <string name="today_due">Due today</string>
+    <string name="today_streak_due">%1$s · due today</string>
+    <string name="today_yesterday">Yesterday</string>
+    <string name="today_yesterday_pending">You can still mark yesterday</string>
+    <string name="today_yesterday_done">Marked</string>
+    <string name="today_unmarked">%1$s unmarked</string>
+    <string name="today_undo">Undo</string>
+    <plurals name="today_streak">
+        <item quantity="one">🔥 %1$d day</item>
+        <item quantity="other">🔥 %1$d days</item>
+    </plurals>
+    <string name="month_1">January</string>
+    <string name="month_2">February</string>
+    <string name="month_3">March</string>
+    <string name="month_4">April</string>
+    <string name="month_5">May</string>
+    <string name="month_6">June</string>
+    <string name="month_7">July</string>
+    <string name="month_8">August</string>
+    <string name="month_9">September</string>
+    <string name="month_10">October</string>
+    <string name="month_11">November</string>
+    <string name="month_12">December</string>
 </resources>

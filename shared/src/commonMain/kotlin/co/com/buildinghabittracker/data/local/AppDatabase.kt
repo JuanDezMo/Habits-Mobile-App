@@ -20,20 +20,25 @@ const val DATABASE_NAME = "habit_tracker.db"
  * Historial de versiones y migraciones:
  * - v1 (iteración 1): tabla `user`.
  * - v2 (iteración 2): tabla `habit`. AutoMigration(1 → 2) crea la tabla sin borrar al usuario.
+ * - v3 (iteración 4): tabla `check_in`. AutoMigration(2 → 3) la crea sin tocar lo demás.
  *
  * Room compara los esquemas exportados en `shared/schemas/` (1.json, 2.json...) y genera
  * la migración solo. Esos archivos se guardan en el proyecto: son el historial de la base.
  */
 @Database(
-    entities = [UserEntity::class, HabitEntity::class],
-    version = 2,
-    autoMigrations = [AutoMigration(from = 1, to = 2)],
+    entities = [UserEntity::class, HabitEntity::class, CheckInEntity::class],
+    version = 3,
+    autoMigrations = [
+        AutoMigration(from = 1, to = 2),
+        AutoMigration(from = 2, to = 3),
+    ],
 )
 @TypeConverters(HabitConverters::class)
 @ConstructedBy(AppDatabaseConstructor::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun habitDao(): HabitDao
+    abstract fun checkInDao(): CheckInDao
 }
 
 /** Room genera la implementación de este objeto para cada plataforma (Android e iOS). */

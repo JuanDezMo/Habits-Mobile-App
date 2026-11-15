@@ -46,9 +46,7 @@
     <string name="recover_confirm_pin_title">Confirma tu PIN nuevo</string>
     <string name="recover_new_pin_subtitle">Tus hábitos se conservan.</string>
 
-    <!-- Hoy y Detalle (provisionales) -->
-    <string name="today_title">Hoy</string>
-    <string name="today_description">La iteración 4 agrega los hábitos del día y el check-in.</string>
+    <!-- Detalle (provisional) -->
 
     <!-- Hábitos (C5) -->
     <string name="habits_title">Mis hábitos</string>
@@ -121,4 +119,37 @@
     <string name="changepin_new_title">Crea tu PIN nuevo</string>
     <string name="changepin_confirm_title">Confirma tu PIN nuevo</string>
     <string name="changepin_new_subtitle">4 números que usarás para entrar.</string>
+
+    <!-- Hoy (D1–D3, E1, E2) -->
+    <string name="today_date">%1$s %2$d de %3$s</string>
+    <string name="today_progress_of">de %1$d</string>
+    <string name="today_missing_one">Te falta %1$s</string>
+    <string name="today_missing_many">Te faltan %1$d hábitos</string>
+    <string name="today_all_done">¡Listo por hoy!</string>
+    <string name="today_nothing_scheduled">Hoy no toca ningún hábito. ¡Descansa!</string>
+    <string name="today_empty">Aquí aparecerán tus hábitos de hoy</string>
+    <string name="today_create_first">Crear mi primer hábito</string>
+    <string name="today_due">Toca hoy</string>
+    <string name="today_streak_due">%1$s · toca hoy</string>
+    <string name="today_yesterday">Ayer</string>
+    <string name="today_yesterday_pending">Aún puedes marcar ayer</string>
+    <string name="today_yesterday_done">Marcado</string>
+    <string name="today_unmarked">%1$s desmarcado</string>
+    <string name="today_undo">Deshacer</string>
+    <plurals name="today_streak">
+        <item quantity="one">🔥 %1$d día</item>
+        <item quantity="other">🔥 %1$d días</item>
+    </plurals>
+    <string name="month_1">enero</string>
+    <string name="month_2">febrero</string>
+    <string name="month_3">marzo</string>
+    <string name="month_4">abril</string>
+    <string name="month_5">mayo</string>
+    <string name="month_6">junio</string>
+    <string name="month_7">julio</string>
+    <string name="month_8">agosto</string>
+    <string name="month_9">septiembre</string>
+    <string name="month_10">octubre</string>
+    <string name="month_11">noviembre</string>
+    <string name="month_12">diciembre</string>
 </resources>

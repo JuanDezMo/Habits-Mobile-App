@@ -2,11 +2,15 @@ package co.com.buildinghabittracker.di
 
 import co.com.buildinghabittracker.data.local.AppDatabase
 import co.com.buildinghabittracker.data.local.buildAppDatabase
+import co.com.buildinghabittracker.data.checkin.CheckInRepositoryImpl
 import co.com.buildinghabittracker.data.habit.HabitRepositoryImpl
 import co.com.buildinghabittracker.data.security.Pbkdf2SecretHasher
 import co.com.buildinghabittracker.data.settings.DataStoreSettingsRepository
 import co.com.buildinghabittracker.data.user.UserRepositoryImpl
 import co.com.buildinghabittracker.domain.auth.AppLock
+import co.com.buildinghabittracker.domain.checkin.CheckInRepository
+import co.com.buildinghabittracker.domain.common.SystemTodayProvider
+import co.com.buildinghabittracker.domain.common.TodayProvider
 import co.com.buildinghabittracker.domain.habit.HabitRepository
 import co.com.buildinghabittracker.domain.security.SecretHasher
 import co.com.buildinghabittracker.domain.settings.SettingsRepository
@@ -19,6 +23,7 @@ import co.com.buildinghabittracker.ui.register.RegisterViewModel
 import co.com.buildinghabittracker.ui.settings.ChangePinViewModel
 import co.com.buildinghabittracker.ui.settings.SettingsViewModel
 import co.com.buildinghabittracker.ui.start.StartViewModel
+import co.com.buildinghabittracker.ui.today.TodayViewModel
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.core.module.dsl.viewModel
@@ -45,10 +50,13 @@ val dataModule = module {
     single<UserRepository> { UserRepositoryImpl(get()) }
     single { get<AppDatabase>().habitDao() }
     single<HabitRepository> { HabitRepositoryImpl(get()) }
+    single { get<AppDatabase>().checkInDao() }
+    single<CheckInRepository> { CheckInRepositoryImpl(get()) }
     single<SecretHasher> { Pbkdf2SecretHasher() }
     single<SettingsRepository> { DataStoreSettingsRepository(get()) }
     single<Clock> { Clock.System }
     single<TimeZone> { TimeZone.currentSystemDefault() }
+    single<TodayProvider> { SystemTodayProvider(get(), get()) }
     single { AppLock(get()) }
 }
 
@@ -59,6 +67,7 @@ val viewModelModule = module {
     viewModelOf(::PinViewModel)
     viewModelOf(::RecoverViewModel)
     viewModelOf(::HabitsViewModel)
+    viewModelOf(::TodayViewModel)
     viewModelOf(::SettingsViewModel)
     viewModelOf(::ChangePinViewModel)
     // El formulario necesita saber qué hábito editar: la pantalla le pasa el id como parámetro.
