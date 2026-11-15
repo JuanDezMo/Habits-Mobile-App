@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Señalética · Hoy</title>
+<link href="https://fonts.googleapis.com/css2?family=Albert+Sans:wght@500;600;800;900&display=swap" rel="stylesheet">
+<style>
+/* Señalética: campos de color plano, pictograma en bloque, grilla estricta, nada decorativo */
+:root{--ground:#FFFFFF;--ink:#111316;--muted:#6B7078;--rule:#E6E8EB;--field:#0E6B4F;--field-off:#DCEDE6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:var(--ground);font-family:"Albert Sans",system-ui,sans-serif;color:var(--ink)}
+.head{padding:56px 20px 0}
+.date{font-size:13px;font-weight:600;color:var(--muted)}
+.hi{font-size:20px;font-weight:800;margin-top:2px}
+/* Signature: el campo de progreso de hoy, plano, se llena de izquierda a derecha */
+.field{margin:20px 20px 0;height:132px;background:var(--field-off);position:relative;overflow:hidden}
+.field i{position:absolute;inset:0 33.3% 0 0;background:var(--field)}
+.field .n{position:absolute;left:16px;bottom:10px;color:#fff;font-weight:900;font-size:76px;line-height:1;letter-spacing:-.04em;font-variant-numeric:tabular-nums}
+.field .n small{font-size:30px;opacity:.7;letter-spacing:0}
+.field .l{position:absolute;right:14px;top:12px;font-size:12px;font-weight:800;color:var(--field);text-transform:uppercase;letter-spacing:.08em}
+.sec{padding:22px 20px 8px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+.row{display:grid;grid-template-columns:48px 1fr 48px;gap:14px;align-items:center;padding:12px 20px;border-top:1px solid var(--rule)}
+.pic{width:48px;height:48px;display:grid;place-items:center;font-size:24px}
+.name{font-size:17px;font-weight:800}
+.streak{display:flex;align-items:center;gap:8px;margin-top:6px;font-size:12px;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.streak b{display:block;height:4px}
+.chk{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-weight:900;font-size:20px;color:#fff;justify-self:end}
+.chk.on{background:var(--ink)}
+.chk.next{box-shadow:0 0 0 4px var(--field-off)}
+.nav{position:absolute;left:0;right:0;bottom:0;height:84px;border-top:1px solid var(--rule);display:grid;grid-template-columns:repeat(3,1fr);padding-top:12px;background:#fff}
+.nav div{display:grid;justify-items:center;gap:4px;font-size:12px;font-weight:800;color:var(--muted)}
+.nav span{width:56px;height:30px;display:grid;place-items:center;font-size:16px}
+.nav .on{color:var(--ink)}.nav .on span{background:var(--field-off)}
+</style></head><body>
+<header class="head"><div class="date">Jueves 14 de noviembre</div><div class="hi">Hola, Ana</div></header>
+<div class="field"><i></i><div class="n">2<small> / 3</small></div><div class="l">Hoy</div></div>
+<div class="sec">Para hoy</div>
+<div class="row"><div class="pic" style="background:#2E8B57">🏋️</div>
+  <div><div class="name">Gym</div><div class="streak"><b style="width:36px;background:#2E8B57"></b>6 días</div></div>
+  <div class="chk on">✓</div></div>
+<div class="row"><div class="pic" style="background:#3A7BD5">📖</div>
+  <div><div class="name">Leer</div><div class="streak"><b style="width:150px;background:#3A7BD5"></b>31 días</div></div>
+  <div class="chk on">✓</div></div>
+<div class="row"><div class="pic" style="background:#8E44AD">🧘</div>
+  <div><div class="name">Meditar</div><div class="streak"><b style="width:4px;background:#8E44AD"></b>Empieza hoy</div></div>
+  <div class="chk next"></div></div>
+<div class="sec">Ayer sin marcar</div>
+<div class="row"><div class="pic" style="background:#D2691E">🏃</div>
+  <div><div class="name">Correr</div><div class="streak">Aún puedes marcar ayer</div></div>
+  <div class="chk"></div></div>
+<nav class="nav"><div class="on"><span>☀</span>Hoy</div><div><span>☰</span>Hábitos</div><div><span>⚙</span>Ajustes</div></nav>
+</body></html>

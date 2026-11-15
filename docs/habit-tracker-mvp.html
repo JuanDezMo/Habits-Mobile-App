@@ -1,0 +1,347 @@
+<title>Habit Tracker MVP</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una columna de lectura; cada módulo = qué hace + reglas + ejemplo en pantalla de teléfono */
+:root{
+  --bg:#f6f8f6; --surface:#ffffff; --fg:#17201b; --muted:#4d5b53; --line:#dde5df;
+  --accent:#17663f; --accent-soft:#e3f2ea; --flame:#9e4114; --miss:#a12f32; --phone:#eef2ef;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, sans-serif;
+  --mono:"JetBrains Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111613; --surface:#18201b; --fg:#e6ede8; --muted:#9aaba0; --line:#2a352e;
+  --accent:#5cc493; --accent-soft:#1d3428; --flame:#f08a4b; --miss:#ef7b7e; --phone:#1e2722; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#18201b; --fg:#e6ede8; --muted:#9aaba0; --line:#2a352e;
+  --accent:#5cc493; --accent-soft:#1d3428; --flame:#f08a4b; --miss:#ef7b7e; --phone:#1e2722; color-scheme:dark}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:960px;margin:0 auto;display:grid;gap:48px}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,2.8rem);font-weight:700}
+h2{font-size:1.6rem;font-weight:700}
+h3{font-size:1rem;font-weight:600;font-family:var(--body);color:var(--muted);text-transform:uppercase;letter-spacing:.06em;font-size:.78rem}
+p{margin:0;max-width:65ch}
+.lead{color:var(--muted);font-size:1.08rem}
+header{display:grid;gap:12px}
+.meta{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-size:.82rem;padding:4px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent);font-weight:600}
+
+/* Alcance */
+.scope{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.95rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.75rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td a{color:var(--accent);font-weight:600;text-decoration:none}
+td a:hover,td a:focus-visible{text-decoration:underline}
+
+/* Módulos */
+section.mod{display:grid;gap:20px;padding-top:32px;border-top:1px solid var(--line)}
+.mod-head{display:grid;gap:6px}
+.code{font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:500}
+.grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:28px;align-items:start}
+@media (max-width:760px){.grid{grid-template-columns:minmax(0,1fr)}}
+.rules{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.rules li{display:grid;grid-template-columns:3.2rem minmax(0,1fr);gap:10px}
+.rules b{font-family:var(--mono);font-size:.82rem;font-weight:500;color:var(--accent);padding-top:2px}
+.new{font-size:.7rem;font-weight:600;color:var(--flame);margin-left:6px;text-transform:uppercase;letter-spacing:.05em}
+
+/* Ejemplo tipo teléfono */
+.example{display:grid;gap:10px;min-width:0}
+.phone{background:var(--phone);border:1px solid var(--line);border-radius:22px;padding:16px;display:grid;gap:10px}
+.screen-title{font-family:var(--display);font-weight:600;font-size:1.05rem}
+.row{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 12px;display:flex;align-items:center;gap:10px;font-size:.95rem}
+.row .name{flex:1;min-width:0}
+.streak{color:var(--flame);font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.box{width:22px;height:22px;border-radius:6px;border:2px solid var(--muted);flex:none;display:grid;place-items:center;font-size:.8rem;font-weight:700}
+.box.on{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.field{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 12px;font-size:.9rem}
+.field small{display:block;color:var(--muted);font-size:.72rem;text-transform:uppercase;letter-spacing:.05em}
+.err{color:var(--miss);font-size:.85rem}
+.ok{color:var(--accent);font-size:.85rem;font-weight:600}
+.btn{background:var(--accent);color:var(--surface);border-radius:10px;padding:9px;text-align:center;font-weight:600;font-size:.9rem}
+.pin{display:flex;gap:12px;justify-content:center;padding:6px 0}
+.pin span{width:14px;height:14px;border-radius:50%;border:2px solid var(--fg)}
+.pin span.f{background:var(--fg)}
+.days{display:flex;gap:6px;flex-wrap:wrap}
+.days span{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:600;border:1px solid var(--line);background:var(--surface)}
+.days span.on{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.note{font-size:.88rem;color:var(--muted)}
+.flow{font-family:var(--mono);font-size:.82rem;line-height:1.7;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px;overflow-x:auto;white-space:pre}
+.notif{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px;font-size:.9rem}
+.notif small{color:var(--muted);font-size:.75rem;display:block}
+
+/* Estadísticas */
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center}
+.stat strong{display:block;font-family:var(--display);font-size:1.3rem;font-variant-numeric:tabular-nums}
+.stat span{font-size:.72rem;color:var(--muted)}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center;font-size:.8rem;font-variant-numeric:tabular-nums}
+.cal .h{color:var(--muted);font-size:.7rem;font-weight:600}
+.cal .d{border-radius:6px;padding:6px 4px;background:var(--surface);border:1px solid var(--line)}
+.cal .y{background:var(--accent);color:var(--surface);border-color:var(--accent)}
+.cal .x{color:var(--miss);border-color:var(--miss)}
+.cal .n{color:var(--muted);background:transparent;border-style:dashed}
+.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:.8rem;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px;vertical-align:middle}
+
+/* Calculadora de cumplimiento */
+.calc{display:grid;gap:6px;font-variant-numeric:tabular-nums}
+.calc div{display:flex;justify-content:space-between;gap:8px;font-size:.9rem;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px}
+.calc .tot{border-color:var(--accent);font-weight:600}
+
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:20px}
+a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="meta">MVP · v1 · 14 nov 2026</span>
+  <h1>Habit Tracker MVP</h1>
+  <p class="lead">Una app para registrar hábitos diarios en el teléfono. Los datos se guardan solo en el dispositivo, sin internet ni servidor. Este documento resume qué hace la app, qué reglas sigue y cómo se ve cada función.</p>
+  <div class="chips"><span class="chip">Android + iOS</span><span class="chip">Datos locales</span><span class="chip">Acceso con PIN</span><span class="chip">Recordatorios locales</span></div>
+</header>
+
+<section>
+  <div class="scope">
+  <table>
+    <thead><tr><th>Módulo</th><th>Qué puede hacer el usuario</th><th>Reglas</th></tr></thead>
+    <tbody>
+      <tr><td><a href="#generales">Generales</a></td><td>Elegir idioma (español o inglés) y tema (claro u oscuro) en Ajustes</td><td class="code">G1–G4</td></tr>
+      <tr><td><a href="#registro">Registro y acceso</a></td><td>Crear su cuenta local, entrar con PIN, recuperarlo y cambiarlo</td><td class="code">A1–A8</td></tr>
+      <tr><td><a href="#habitos">Hábitos</a></td><td>Crear, editar, archivar y desarchivar hábitos</td><td class="code">C1–C5</td></tr>
+      <tr><td><a href="#checkin">Hoy y check-in</a></td><td>Ver los hábitos del día y marcarlos como hechos</td><td class="code">D1–D3</td></tr>
+      <tr><td><a href="#estadisticas">Estadísticas</a></td><td>Ver racha, mejor racha, cumplimiento y calendario</td><td class="code">E1–E7</td></tr>
+      <tr><td><a href="#recordatorios">Recordatorios</a></td><td>Recibir un aviso a la hora elegida</td><td class="code">R1–R8</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- G -->
+<section class="mod" id="generales">
+  <div class="mod-head">
+    <span class="code">G · Generales</span>
+    <h2>Idioma, tema e identificador</h2>
+    <p class="lead">La primera vez la app usa el idioma y el modo de color del teléfono. Después el usuario puede elegir otros en Ajustes.</p>
+  </div>
+  <div class="grid">
+    <div>
+      <h3>Reglas</h3>
+      <ul class="rules">
+        <li><b>G1</b><span>La app está en español e inglés. La primera vez abre en el idioma del teléfono, o en inglés si es otro. Se traducen todos los textos, incluidos el aviso (R5) y los mensajes de error.</span></li>
+        <li><b>G2</b><span>La app tiene modo claro y modo oscuro. Por defecto sigue la configuración del teléfono.</span></li>
+        <li><b>G3</b><span>El identificador de la app es <span class="code">co.com.buildinghabittracker</span> en Android y en iOS.</span></li>
+        <li><b>G4</b><span>En Ajustes se elige el idioma (Español / English) y el tema (Igual que el teléfono / Claro / Oscuro). El cambio se ve al instante y los avisos ya programados pasan al nuevo idioma. La elección se guarda en el teléfono.</span></li>
+      </ul>
+    </div>
+    <div class="example">
+      <h3>Ejemplo</h3>
+      <div class="notif"><small>Teléfono en español · 07:00</small>🏋️ ¿Ya hiciste Gym hoy?</div>
+      <div class="notif"><small>Teléfono en inglés · 07:00</small>🏋️ Did you do Gym today?</div>
+      <div class="phone">
+        <div class="screen-title">Ajustes</div>
+        <div class="field"><small>Idioma</small>Español</div>
+        <div class="field"><small>Tema</small>Igual que el teléfono</div>
+        <div class="field"><small>Seguridad</small>Cambiar PIN</div>
+      </div>
+      <p class="note">El título del hábito no se traduce: es texto del usuario.</p>
+    </div>
+  </div>
+</section>
+
+<!-- A -->
+<section class="mod" id="registro">
+  <div class="mod-head">
+    <span class="code">A · Registro y acceso</span>
+    <h2>Registro y acceso con PIN</h2>
+    <p class="lead">La primera vez el usuario se registra. Después entra con un PIN de 4 dígitos que solo él conoce.</p>
+  </div>
+  <div class="grid">
+    <div>
+      <h3>Reglas</h3>
+      <ul class="rules">
+        <li><b>A1</b><span>Hay un solo usuario por teléfono. El registro se hace una sola vez, en 4 pasos. Se puede volver al paso anterior sin perder lo escrito (al volver a “Crear PIN”, el PIN se borra). Nada se guarda hasta terminar: si cierra la app a mitad, empieza de nuevo. Al terminar va a la pantalla de PIN.</span></li>
+        <li><b>A2</b><span>Nombre obligatorio, de 1 a 30 caracteres. Email obligatorio, con formato válido (ej. ana@correo.com) y máximo 254 caracteres; no se verifica.</span></li>
+        <li><b>A3</b><span>El PIN tiene exactamente 4 números y se escribe dos veces para confirmarlo. Se guarda cifrado, nunca a la vista.</span></li>
+        <li><b>A4</b><span>El usuario escribe su propia pregunta de seguridad (5 a 100 caracteres) y su respuesta (3 a 50). La respuesta se guarda cifrada y no importan mayúsculas, acentos ni espacios extra.</span></li>
+        <li><b>A5</b><span>El PIN se pide al abrir la app y al volver a ella después de 5 minutos o más.</span></li>
+        <li><b>A6</b><span>Tras 5 intentos fallidos, la app se bloquea 30 segundos, y el bloqueo se duplica con cada fallo nuevo hasta un máximo de 15 minutos. Aplica al PIN y a la pregunta de seguridad, y cerrar la app no lo salta.</span></li>
+        <li><b>A7</b><span>Si olvida el PIN, responde su pregunta de seguridad. Si acierta, el contador de fallos vuelve a cero, crea un PIN nuevo y entra a Hoy. No pierde ningún dato.</span></li>
+        <li><b>A8</b><span>En Ajustes puede cambiar el PIN: escribe el actual y luego el nuevo dos veces. Los fallos con el PIN actual cuentan para el bloqueo de A6.</span></li>
+      </ul>
+    </div>
+    <div class="example">
+      <h3>Ejemplo</h3>
+      <div class="phone">
+        <div class="screen-title">Crear cuenta</div>
+        <div class="field"><small>Nombre</small>Ana</div>
+        <div class="field"><small>Email</small>ana@correo.com</div>
+        <div class="field"><small>Pregunta de seguridad</small>¿Nombre de mi primera mascota?</div>
+        <div class="field"><small>Respuesta</small>••••••</div>
+        <div class="btn">Continuar</div>
+      </div>
+      <div class="phone">
+        <div class="screen-title">Ingresa tu PIN</div>
+        <div class="pin"><span class="f"></span><span class="f"></span><span class="f"></span><span></span></div>
+        <div class="err">PIN incorrecto. Te quedan 2 intentos.</div>
+        <div class="note">Enlace “Olvidé mi PIN” → pregunta de seguridad → PIN nuevo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- C -->
+<section class="mod" id="habitos">
+  <div class="mod-head">
+    <span class="code">C · Hábitos</span>
+    <h2>Hábitos</h2>
+    <p class="lead">Un hábito es algo que el usuario quiere hacer ciertos días de la semana. Cada día solo se marca como hecho o no hecho.</p>
+  </div>
+  <div class="grid">
+    <div>
+      <h3>Reglas</h3>
+      <ul class="rules">
+        <li><b>C1</b><span>El título es obligatorio, de 1 a 40 caracteres. No puede haber dos hábitos activos con el mismo título.</span></li>
+        <li><b>C2</b><span>La descripción es opcional (máximo 200 caracteres). El emoji y el color vienen con un valor por defecto.</span></li>
+        <li><b>C3</b><span>Hay que elegir al menos un día de la semana. Existe un atajo para “todos los días”.</span></li>
+        <li><b>C4</b><span>Solo se registra hecho o no hecho. No hay metas numéricas (como “8 vasos de agua”).</span></li>
+        <li><b>C5</b><span>Los hábitos no se eliminan, se archivan. Un hábito archivado no aparece en Hoy, no envía recordatorios y conserva su historial. Se puede desarchivar.</span></li>
+      </ul>
+    </div>
+    <div class="example">
+      <h3>Ejemplo</h3>
+      <div class="phone">
+        <div class="screen-title">Nuevo hábito</div>
+        <div class="field"><small>Título</small>🏋️ Gym</div>
+        <div class="field"><small>Descripción (opcional)</small>30 minutos de pesas</div>
+        <div class="field"><small>Días</small>
+          <div class="days" style="margin-top:6px"><span class="on">L</span><span>M</span><span class="on">M</span><span>J</span><span class="on">V</span><span>S</span><span>D</span></div>
+        </div>
+        <div class="field"><small>Recordatorio</small>07:00</div>
+        <div class="btn">Guardar</div>
+      </div>
+      <p class="note">Si ya existe un hábito activo llamado “Gym”, aparece el error: “Ya tienes un hábito con ese título”.</p>
+    </div>
+  </div>
+</section>
+
+<!-- D -->
+<section class="mod" id="checkin">
+  <div class="mod-head">
+    <span class="code">D · Check-in</span>
+    <h2>Hoy y check-in</h2>
+    <p class="lead">La pantalla Hoy muestra solo los hábitos que tocan ese día. Un toque en la casilla lo marca como hecho.</p>
+  </div>
+  <div class="grid">
+    <div>
+      <h3>Reglas</h3>
+      <ul class="rules">
+        <li><b>D1</b><span>Solo se puede marcar hoy o ayer (para corregir un olvido), y solo en los días programados del hábito. Nunca días futuros.</span></li>
+        <li><b>D2</b><span>Un hábito tiene como máximo un check-in por día. Tocar dos veces no lo duplica.</span></li>
+        <li><b>D3</b><span>Se puede desmarcar en las mismas fechas permitidas (hoy o ayer).</span></li>
+      </ul>
+    </div>
+    <div class="example">
+      <h3>Ejemplo · miércoles</h3>
+      <div class="phone">
+        <div class="screen-title">Hoy</div>
+        <div class="row"><span class="name">🏋️ Gym</span><span class="streak">🔥 5</span><span class="box"></span></div>
+        <div class="row"><span class="name">📖 Leer</span><span class="streak">🔥 12</span><span class="box on">✓</span></div>
+      </div>
+      <p class="note">Al tocar la casilla de Gym, se marca ✓ y la racha sube de 5 a 6. Si se desmarca, vuelve a 5.</p>
+    </div>
+  </div>
+</section>
+
+<!-- E -->
+<section class="mod" id="estadisticas">
+  <div class="mod-head">
+    <span class="code">E · Estadísticas</span>
+    <h2>Estadísticas</h2>
+    <p class="lead">El detalle de cada hábito muestra cómo va el usuario: racha, mejor racha, cumplimiento y un calendario del mes.</p>
+  </div>
+  <div class="grid">
+    <div>
+      <h3>Reglas</h3>
+      <ul class="rules">
+        <li><b>E1</b><span>La racha actual cuenta los días programados seguidos con check-in. Los días que no tocan se ignoran y no la rompen.</span></li>
+        <li><b>E2</b><span>Si hoy toca y aún no se marca, la racha se mantiene hasta que termine el día.</span></li>
+        <li><b>E3</b><span>La mejor racha es la más larga que ha tenido el hábito.</span></li>
+        <li><b>E4</b><span>Cumplimiento = días hechos ÷ días programados, desde que se creó el hábito hasta hoy.</span></li>
+        <li><b>E5</b><span>El calendario mensual marca cada día como hecho, no hecho o no programado, y permite cambiar de mes.</span></li>
+        <li><b>E6</b><span>Los días en que el hábito estuvo archivado cuentan como no hechos: bajan el cumplimiento, rompen la racha y salen como no hechos en el calendario.</span></li>
+        <li><b>E7</b><span>Las fechas usan la zona horaria del teléfono.</span></li>
+      </ul>
+    </div>
+    <div class="example">
+      <h3>Ejemplo · Gym (L/M/V)</h3>
+      <div class="phone">
+        <div class="screen-title">🏋️ Gym</div>
+        <div class="stats">
+          <div class="stat"><strong>4</strong><span>Racha actual</span></div>
+          <div class="stat"><strong>8</strong><span>Mejor racha</span></div>
+          <div class="stat"><strong>70%</strong><span>Cumplimiento</span></div>
+        </div>
+        <div class="cal" aria-label="Calendario de noviembre">
+          <span class="h">L</span><span class="h">M</span><span class="h">M</span><span class="h">J</span><span class="h">V</span><span class="h">S</span><span class="h">D</span>
+          <span class="d y">3</span><span class="d n">4</span><span class="d x">5</span><span class="d n">6</span><span class="d y">7</span><span class="d n">8</span><span class="d n">9</span>
+          <span class="d y">10</span><span class="d n">11</span><span class="d y">12</span><span class="d n">13</span><span class="d y">14</span><span class="d n">15</span><span class="d n">16</span>
+        </div>
+        <div class="legend"><span><i style="background:var(--accent)"></i>Hecho</span><span><i style="border:1px solid var(--miss)"></i>No hecho</span><span><i style="border:1px dashed var(--muted)"></i>No toca</span></div>
+      </div>
+      <p class="note">El miércoles 5 no se hizo y la racha se rompió. Desde el viernes 7 se cumplieron todos los días programados (7, 10, 12 y 14), así que la racha actual es 4. Los martes, jueves y fines de semana no cuentan.</p>
+      <div class="calc" aria-label="Ejemplo de cumplimiento con archivado">
+        <div><span>Días programados desde la creación</span><span>20</span></div>
+        <div><span>Días hechos</span><span>14</span></div>
+        <div><span>Días archivado (cuentan como no hechos)</span><span>incluidos</span></div>
+        <div class="tot"><span>Cumplimiento = 14 ÷ 20</span><span>70%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- R -->
+<section class="mod" id="recordatorios">
+  <div class="mod-head">
+    <span class="code">R · Recordatorios</span>
+    <h2>Recordatorios</h2>
+    <p class="lead">Cada hábito puede tener un aviso a una hora. El teléfono lo muestra aunque la app esté cerrada y sin internet.</p>
+  </div>
+  <div class="grid">
+    <div>
+      <h3>Reglas</h3>
+      <ul class="rules">
+        <li><b>R1</b><span>Cada hábito tiene como máximo un recordatorio, y es opcional. Solo suena en sus días programados.</span></li>
+        <li><b>R2</b><span>Si el hábito ya está marcado ese día, el recordatorio no suena.</span></li>
+        <li><b>R3</b><span>Si se desmarca y la hora del recordatorio aún no pasó, el aviso de hoy vuelve a programarse.</span></li>
+        <li><b>R4</b><span>Los avisos se programan para los próximos 7 días y se renuevan cada vez que se abre la app. Si no se abre en más de 7 días, dejan de sonar. Riesgo aceptado: iOS guarda máximo 64 avisos pendientes, así que con más de 9 hábitos diarios con recordatorio algunos avisos lejanos pueden no programarse.</span></li>
+        <li><b>R5</b><span>El texto del aviso es: “{emoji} ¿Ya hiciste {título} hoy?”</span></li>
+        <li><b>R6</b><span>El permiso de notificaciones se pide al activar el primer recordatorio. Si el usuario lo niega, la app sigue funcionando y muestra un aviso para activarlo en Ajustes. En Android 12 o superior, justo después se pide también el permiso “Alarmas y recordatorios” con una pantalla que lleva a Ajustes. Si no lo activa, el aviso puede llegar unos minutos tarde y la app muestra cómo activarlo.</span></li>
+        <li><b>R7</b><span>Al editar un hábito, su recordatorio se ajusta. Al archivarlo, se cancela.</span></li>
+        <li><b>R8</b><span>Al tocar el aviso se abre la pantalla Hoy, pidiendo antes el PIN si corresponde (regla A5).</span></li>
+      </ul>
+    </div>
+    <div class="example">
+      <h3>Ejemplo · Gym a las 07:00</h3>
+      <div class="notif"><small>Habit Tracker · 07:00</small>🏋️ ¿Ya hiciste Gym hoy?</div>
+      <div class="flow">06:30  Marca Gym ✓    → se cancela el aviso de hoy
+06:40  Desmarca Gym   → se vuelve a programar
+07:00  Suena el aviso  (Gym sigue sin hacer)</div>
+      <div class="flow">Toca el aviso
+  ├─ App cerrada o +5 min fuera → PIN → Hoy
+  └─ Menos de 5 min fuera       → Hoy</div>
+    </div>
+  </div>
+</section>
+
+<footer>Habit Tracker MVP · Reglas validadas el 14 de noviembre de 2026. Cualquier cambio a una regla debe actualizar este documento y conservar su código (A1, C3, E6…).</footer>
+
+</div>

@@ -1,0 +1,327 @@
+<title>Habit Tracker Plan</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: tablero de avance arriba (3 indicadores + escalera de reglas), luego una tarjeta por iteración y las convenciones de pruebas */
+:root{
+  --bg:#f6f8f6; --surface:#ffffff; --fg:#17201b; --muted:#4d5b53; --line:#dde5df;
+  --accent:#17663f; --accent-soft:#e3f2ea; --design:#5b3fa0; --design-soft:#efeafa; --pending:#e8ece9;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111613; --surface:#18201b; --fg:#e6ede8; --muted:#a9b8ae; --line:#2a352e;
+  --accent:#5cc493; --accent-soft:#1d3428; --design:#b9a3f0; --design-soft:#2a2340; --pending:#232c26; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#18201b; --fg:#e6ede8; --muted:#a9b8ae; --line:#2a352e;
+  --accent:#5cc493; --accent-soft:#1d3428; --design:#b9a3f0; --design-soft:#2a2340; --pending:#232c26; color-scheme:dark}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:980px;margin:0 auto;display:grid;gap:40px}
+h1,h2,h3{font-family:var(--display);margin:0;line-height:1.15;text-wrap:balance}
+h1{font-size:clamp(2rem,5vw,2.8rem)}
+h2{font-size:1.45rem}
+p{margin:0;max-width:68ch}
+.lead{color:var(--muted);font-size:1.05rem}
+.meta{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+header{display:grid;gap:12px}
+section{display:grid;gap:18px}
+code{font-family:var(--mono);font-size:.84em;background:var(--accent-soft);color:var(--accent);padding:2px 6px;border-radius:4px;overflow-wrap:anywhere}
+.label{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+
+/* Tablero */
+.kpis{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+@media (max-width:640px){.kpis{grid-template-columns:minmax(0,1fr)}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:grid;gap:8px}
+.kpi strong{font-family:var(--display);font-size:2rem;font-variant-numeric:tabular-nums;line-height:1}
+.kpi strong small{font-size:1rem;color:var(--muted);font-weight:600}
+.bar{height:8px;background:var(--pending);border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);border-radius:4px}
+.ladder{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;display:grid;gap:12px;overflow-x:auto}
+.steps{display:grid;grid-template-columns:repeat(7,minmax(74px,1fr));gap:8px;align-items:end;min-width:560px}
+.step{display:grid;gap:6px;text-align:center}
+.step .col{background:var(--pending);border-radius:8px 8px 4px 4px;position:relative;display:flex;align-items:flex-end;justify-content:center}
+.step .col i{position:absolute;inset:auto 0 0 0;background:var(--accent-soft);border:1px solid var(--accent);border-radius:8px 8px 4px 4px}
+.step .col span{position:relative;font-family:var(--mono);font-size:.8rem;color:var(--accent);font-weight:500;padding:0 6px 8px;font-variant-numeric:tabular-nums}
+.step.ds .col i{background:var(--design-soft);border-color:var(--design)}
+.step.ds .col span{color:var(--design)}
+.step b{font-family:var(--display);font-size:1rem}
+.step em{font-style:normal;font-size:.78rem;color:var(--muted)}
+
+/* Iteraciones */
+.its{display:grid;gap:14px}
+.it{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px 20px;display:grid;gap:14px}
+.it.ds{border-color:var(--design)}
+.it-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px}
+.num{font-family:var(--display);font-size:1.6rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;width:1.6rem}
+.it-head h3{font-size:1.2rem;flex:1;min-width:12rem}
+.pill{font-size:.74rem;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--pending);color:var(--muted);white-space:nowrap}
+.pill.rules{background:var(--accent-soft);color:var(--accent)}
+.pill.wip{background:var(--accent-soft);color:var(--accent)}
+.pill.now{background:var(--accent);color:var(--surface)}
+.it.ds .pill.rules{background:var(--design-soft);color:var(--design)}
+.value{color:var(--muted);margin-top:-6px}
+.cols{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px}
+@media (max-width:720px){.cols{grid-template-columns:minmax(0,1fr)}}
+.cols>div{display:grid;gap:8px;align-content:start;min-width:0}
+ol.tasks{margin:0;padding-left:22px;display:grid;gap:6px}
+ol.tasks li::marker{font-family:var(--mono);font-size:.82rem;color:var(--muted)}
+dl{margin:0;display:grid;gap:10px}
+dt{font-size:.74rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600}
+dd{margin:2px 0 0;font-size:.95rem}
+
+/* Convenciones */
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+pre{margin:0;font-family:var(--mono);font-size:.82rem;line-height:1.65;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;overflow-x:auto}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:720px){.two{grid-template-columns:minmax(0,1fr)}}
+.two>div{display:grid;gap:8px;min-width:0;align-content:start}
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:20px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="meta">Plan · v1 · 14 nov 2026 · aprobado</span>
+  <h1>Habit Tracker Plan</h1>
+  <p class="lead">7 iteraciones para el MVP en Compose Multiplatform. Cada iteración termina con una demo que funciona en Android e iOS y con un flujo Maestro que la prueba. La iteración 3 define el sistema de diseño.</p>
+</header>
+
+<section>
+  <h2>Avance</h2>
+  <div class="kpis">
+    <div class="kpi"><span class="label">Reglas cubiertas con prueba</span><strong>0 <small>/ 35</small></strong><div class="bar"><i style="width:0%"></i></div></div>
+    <div class="kpi"><span class="label">Iteraciones cerradas</span><strong>0 <small>/ 7</small></strong><div class="bar"><i style="width:0%"></i></div></div>
+    <div class="kpi"><span class="label">Flujos Maestro en verde</span><strong>0 <small>/ 7</small></strong><div class="bar"><i style="width:0%"></i></div></div>
+  </div>
+  <div class="ladder">
+    <span class="label">Reglas acumuladas al cerrar cada iteración (meta)</span>
+    <div class="steps">
+      <div class="step"><div class="col" style="height:24px"><span>3</span></div><b>0</b><em>App base</em></div>
+      <div class="step"><div class="col" style="height:58px"><i style="height:100%"></i><span>10</span></div><b>1</b><em>Entrar</em></div>
+      <div class="step"><div class="col" style="height:82px"><i style="height:100%"></i><span>15</span></div><b>2</b><em>Hábitos</em></div>
+      <div class="step ds"><div class="col" style="height:94px"><i style="height:100%"></i><span>17</span></div><b>3</b><em>Diseño y Ajustes</em></div>
+      <div class="step"><div class="col" style="height:106px"><i style="height:100%"></i><span>22</span></div><b>4</b><em>Hoy</em></div>
+      <div class="step"><div class="col" style="height:130px"><i style="height:100%"></i><span>27</span></div><b>5</b><em>Estadísticas</em></div>
+      <div class="step"><div class="col" style="height:168px"><i style="height:100%"></i><span>35</span></div><b>6</b><em>Avisos</em></div>
+    </div>
+  </div>
+  <p>Una iteración se cierra solo cuando todas sus tareas cumplen “Hecho cuando”, la demo funciona en los dos sistemas y su flujo Maestro está escrito y pasa en Android e iOS. Maestro se ejecuta a demanda: antes de cada ejecución se validan contigo los escenarios a correr.</p>
+</section>
+
+<section>
+  <h2>Iteraciones</h2>
+  <div class="its">
+
+    <article class="it">
+      <div class="it-head"><span class="num">0</span><h3>Base del proyecto</h3><span class="pill rules">3 / 35 · G1–G3</span><span class="pill wip">Código hecho · falta Maestro e iOS</span></div>
+      <p class="value">Valor: la app abre y navega en Android e iOS, en español o inglés y en modo claro u oscuro.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li>Proyecto KMP con Compose para Android e iOS, con las carpetas <code>ui/</code>, <code>domain/</code>, <code>data/</code> y <code>di/</code>.</li>
+            <li>Koin y Navigation con 4 pantallas vacías: PIN, Hoy, Hábitos y Detalle.</li>
+            <li>Room con la base de datos vacía, kotlin.test y una primera prueba.</li>
+            <li>Objeto <code>TestTags</code>, <code>testTagsAsResourceId</code> en la raíz y el primer flujo Maestro.</li>
+            <li>Identificador <code>co.com.buildinghabittracker</code>, textos en recursos <code>es</code> / <code>en</code> y tema claro u oscuro según el teléfono.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>La app abre en los dos sistemas, se navega entre las pantallas vacías, cambia de idioma y de tema según el teléfono, hay 1 prueba en verde y el flujo de arranque está escrito.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd><code>.maestro/00_arranque.yaml</code></dd></div>
+          <div><dt>Aprende</dt><dd>Estructura de capas, Kotlin básico, identificadores de prueba.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="it">
+      <div class="it-head"><span class="num">1</span><h3>Registro y PIN</h3><span class="pill rules">10 / 35 · A1–A7</span><span class="pill wip">Código hecho · falta Maestro e iOS</span></div>
+      <p class="value">Valor: el usuario crea su cuenta y entra con su PIN.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li><code>PinRules</code> y <code>PinHasher</code> (PBKDF2), con pruebas del bloqueo por intentos.</li>
+            <li>Tabla <code>user</code>, <code>UserRepository</code> y su versión falsa para pruebas.</li>
+            <li>Pantalla de Registro (4 pasos) con su ViewModel.</li>
+            <li>Pantalla de PIN con bloqueo y recuperación con la pregunta de seguridad.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>Te registras, cierras la app y vuelves a entrar con tu PIN. Tras 5 min en segundo plano se pide de nuevo.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd><code>.maestro/01_registro_pin.yaml</code></dd></div>
+          <div><dt>Aprende</dt><dd>MVVM, StateFlow, interfaces y fakes.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="it">
+      <div class="it-head"><span class="num">2</span><h3>Hábitos</h3><span class="pill rules">15 / 35 · C1–C5</span><span class="pill wip">Código hecho · falta Maestro e iOS</span></div>
+      <p class="value">Valor: el usuario arma y mantiene su lista de hábitos.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li>Tabla <code>habit</code>, TypeConverters y mapper.</li>
+            <li><code>HabitValidator</code> con sus pruebas.</li>
+            <li>Formulario para crear y editar: título, descripción, emoji, color y días.</li>
+            <li>Lista de activos y archivados. Se archiva desde Editar, con confirmación, y se desarchiva desde Archivados.</li>
+            <li>Migración automática de la base de datos de la v1 a la v2, sin perder al usuario registrado.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>Creas, editas, archivas y desarchivas hábitos, y siguen ahí al reabrir la app.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd><code>.maestro/02_habitos.yaml</code></dd></div>
+          <div><dt>Aprende</dt><dd>Room, Flow, formularios y validación.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="it ds">
+      <div class="it-head"><span class="num">3</span><h3>Sistema de diseño y Ajustes</h3><span class="pill rules">17 / 35 · G4, A8 + diseño</span><span class="pill wip">Código hecho · falta probar Cambiar PIN, DESIGN.md e iOS</span></div>
+      <p class="value">Valor: la app tiene identidad visual propia, accesible en modo claro y oscuro, y el usuario elige su idioma, su tema y puede cambiar su PIN.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li>Paleta para modo claro y oscuro, tipografía, espaciados y bordes, todo como tokens.</li>
+            <li>Diseño visual de todas las pantallas del MVP, para tu aprobación.</li>
+            <li>Componentes base con <code>@Preview</code> y parámetro <code>testTag</code>: botón, campo, tarjeta de hábito, casilla, selector de día y teclado de PIN.</li>
+            <li>Aplicar el tema y los componentes a Registro, PIN y Hábitos.</li>
+            <li>Pantalla Ajustes (tercera pestaña) con <code>SettingsRepository</code> en DataStore: idioma, tema y Cambiar PIN.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>Apruebas el diseño visual, el contraste cumple AA en los dos modos y las pantallas existentes usan el tema. Al cambiar idioma o tema en Ajustes, la app cambia al instante y lo recuerda al reabrir. Cambiar PIN respeta el bloqueo de A6.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd>Se vuelven a correr los flujos 01 y 02 sin cambios, en modo claro y oscuro. Si pasan, el rediseño no rompió nada.</dd></div>
+          <div><dt>Aprende</dt><dd>Theming de Compose, componentes reutilizables y DataStore.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="it">
+      <div class="it-head"><span class="num">4</span><h3>Hoy y check-in</h3><span class="pill rules">22 / 35 · D1–D3, E1, E2</span><span class="pill now">Código hecho · falta Maestro e iOS</span></div>
+      <p class="value">Valor: el usuario registra su día. Es la función principal de la app.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li>Tabla <code>check_in</code> con índice único y <code>CheckInRepository</code>.</li>
+            <li>Primera versión de <code>StreakCalculator</code> (racha actual) con sus pruebas.</li>
+            <li>Pantalla Hoy con los componentes del sistema de diseño, con marcar y desmarcar.</li>
+            <li>Sección “Ayer sin marcar”.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>Marcas un hábito, la racha sube y solo se permiten hoy y ayer.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd><code>.maestro/04_checkin.yaml</code></dd></div>
+          <div><dt>Aprende</dt><dd>Fechas con kotlinx-datetime y pruebas de lógica pura.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="it">
+      <div class="it-head"><span class="num">5</span><h3>Estadísticas</h3><span class="pill rules">27 / 35 · E3–E7</span><span class="pill">Pendiente</span></div>
+      <p class="value">Valor: el usuario ve su progreso.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li>Completar <code>StreakCalculator</code>: mejor racha, cumplimiento y días archivados, con sus pruebas.</li>
+            <li>Tabla de periodos archivados (desde / hasta) para que los días archivados rompan la racha (E6).</li>
+            <li>Pantalla de Detalle con las tres estadísticas.</li>
+            <li>Calendario mensual con navegación entre meses.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>El detalle de Gym muestra los mismos números que el ejemplo del documento del MVP.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd><code>.maestro/05_estadisticas.yaml</code></dd></div>
+          <div><dt>Aprende</dt><dd>TDD y componentes de UI más complejos.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+    <article class="it">
+      <div class="it-head"><span class="num">6</span><h3>Recordatorios y UseCases</h3><span class="pill rules">35 / 35 · R1–R8</span><span class="pill">Pendiente</span></div>
+      <p class="value">Valor: la app le recuerda al usuario sus hábitos.</p>
+      <div class="cols">
+        <div><span class="label">Tareas</span>
+          <ol class="tasks">
+            <li><code>ReminderScheduler</code> con su implementación para Android y para iOS, y los permisos.</li>
+            <li>Extraer los UseCases: <code>CheckInHabit</code>, <code>UncheckHabit</code>, <code>SaveHabit</code>, <code>ArchiveHabit</code> y <code>RescheduleReminders</code>.</li>
+            <li>Recordatorio en el formulario y pantalla de Alarma exacta en Android.</li>
+            <li>Tocar el aviso abre el PIN y luego Hoy.</li>
+          </ol>
+        </div>
+        <dl>
+          <div><dt>Hecho cuando</dt><dd>El aviso llega en un dispositivo real, no suena si el hábito ya está marcado y las pruebas de los ViewModels siguen en verde después del cambio.</dd></div>
+          <div><dt>Flujo Maestro</dt><dd><code>.maestro/06_recordatorio.yaml</code>. En iOS, tocar el aviso (R8) se verifica a mano.</dd></div>
+          <div><dt>Aprende</dt><dd>UseCases, expect/actual y notificaciones.</dd></div>
+        </dl>
+      </div>
+    </article>
+
+  </div>
+</section>
+
+<section>
+  <h2>Identificadores para pruebas E2E</h2>
+  <p>Cada elemento interactivo y cada estado que una prueba deba verificar lleva un <code>testTag</code>. El mismo identificador funciona en Maestro y en Appium, en Android y en iOS.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Plataforma</th><th>Cómo lo ven Maestro y Appium</th><th>Configuración</th></tr></thead>
+    <tbody>
+      <tr><td>Android</td><td><code>resource-id</code></td><td><code>testTagsAsResourceId = true</code> una vez en la raíz, en todas las versiones</td></tr>
+      <tr><td>iOS</td><td><code>accessibilityIdentifier</code></td><td>Ninguna. Compose Multiplatform lo traduce solo.</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="two">
+    <div>
+      <span class="label">Convención · pantalla_elemento[_id]</span>
+<pre>object TestTags {
+  const val PIN_DOTS = "pin_dots"
+  const val PIN_ERROR = "pin_error_text"
+  fun pinKey(n: Int) = "pin_key_$n"
+  fun todayCheck(id: Long) = "today_check_$id"
+  fun todayStreak(id: Long) = "today_streak_$id"
+  const val FORM_TITLE = "form_title_input"
+  const val DETAIL_STREAK = "detail_stat_streak"
+  fun calDay(d: LocalDate) = "detail_cal_day_$d"
+}</pre>
+    </div>
+    <div>
+      <span class="label">Ejemplo · flujo Maestro</span>
+<pre># .maestro/04_checkin.yaml
+appId: co.com.buildinghabittracker
+---
+- launchApp
+- tapOn: { id: "pin_key_1" }
+- tapOn: { id: "pin_key_3" }
+- tapOn: { id: "pin_key_5" }
+- tapOn: { id: "pin_key_7" }
+- tapOn: { id: "today_check_1" }
+- assertVisible:
+    id: "today_streak_1"
+    text: "🔥 6"</pre>
+    </div>
+  </div>
+  <span class="label">Reglas</span>
+  <ul class="plain">
+    <li>Llevan identificador los elementos interactivos (botones, campos, casillas, pestañas) y los estados clave (errores, racha, cumplimiento, bloqueo, mensajes).</li>
+    <li>En las listas, el identificador usa el id del hábito, nunca su posición ni su título.</li>
+    <li>Un identificador nunca contiene datos del usuario: nombre, email ni título del hábito.</li>
+    <li>No se usan textos visibles ni <code>contentDescription</code> como selector, porque cambian con el idioma y son para lectores de pantalla.</li>
+    <li>Los diálogos de permisos son del sistema. Se resuelven con <code>permissions</code> en Maestro y <code>autoGrantPermissions</code> en Appium.</li>
+    <li>Maestro se ejecuta solo a demanda. Antes de cada ejecución se validan contigo la ejecución y los escenarios.</li>
+    <li>Los flujos usan identificadores, no textos, así que funcionan igual en español e inglés.</li>
+    <li>Appium no tiene suite propia en el MVP. Los identificadores quedan listos para que QA la construya.</li>
+  </ul>
+</section>
+
+<footer>Habit Tracker · Plan v1. Complementa “Habit Tracker MVP” (reglas A–R) y “Habit Tracker Arquitectura”.</footer>
+
+</div>

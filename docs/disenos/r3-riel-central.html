@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Riel central · Hoy</title>
+<meta name="viewport" content="width=390">
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Libre+Franklin:wght@600&display=swap" rel="stylesheet">
+<style>
+/* Riel central: tinta negra y un bermellón sobre papel hueso; reglas de 1 px, sin radios */
+:root{--bone:#EFEADF;--ink:#1B1A18;--verm:#C8381F;--hair:#1B1A18}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:var(--bone);font-family:"Libre Caslon Text",Georgia,serif;color:var(--ink)}
+.head{padding:56px 22px 14px;border-bottom:1px solid var(--hair)}
+.k{font-family:"Libre Franklin",sans-serif;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--verm)}
+.hi{font-size:34px;margin-top:6px}
+.prog{display:flex;gap:6px;margin-top:12px;align-items:center;font-size:14px}
+.prog b{width:18px;height:18px;border:1px solid var(--ink)}.prog b.on{background:var(--verm);border-color:var(--verm)}
+/* el riel bermellón corre a la izquierda con las llaves de cada día */
+.body{display:grid;grid-template-columns:44px 1fr}
+.rail{border-right:1px solid var(--verm);display:grid;grid-auto-rows:92px;justify-items:center;padding-top:10px}
+.rail span{font-family:"Libre Franklin",sans-serif;font-size:11px;color:var(--verm);letter-spacing:.1em}
+.row{height:92px;border-bottom:1px solid var(--hair);display:grid;grid-template-columns:1fr 48px;align-items:center;padding:0 18px}
+.name{font-size:21px}
+.meta{font-size:13px;margin-top:4px}
+.meta i{font-style:normal;color:var(--verm)}
+.det{width:40px;height:40px;border:1px solid var(--ink);display:grid;place-items:center;font-family:"Libre Franklin";font-size:18px}
+.det.on{background:var(--ink);color:var(--bone)}
+.det.focus{outline:1px solid var(--verm);outline-offset:4px}
+.nav{position:absolute;left:0;right:0;bottom:0;height:80px;border-top:1px solid var(--hair);display:flex;justify-content:space-around;padding-top:16px;font-family:"Libre Franklin";font-size:12px;letter-spacing:.12em;text-transform:uppercase}
+.nav .on{color:var(--verm)}
+</style></head><body>
+<header class="head"><div class="k">Jueves · 14 · Noviembre</div><div class="hi">Hola, Ana.</div>
+  <div class="prog"><b class="on"></b><b class="on"></b><b></b>&nbsp;dos de tres, hoy</div></header>
+<div class="body">
+  <div class="rail"><span>I</span><span>II</span><span>III</span><span>¶</span></div>
+  <div>
+    <div class="row"><div><div class="name">🏋️ Gym</div><div class="meta">Lunes, miércoles, viernes · <i>6 días</i></div></div><div class="det on">✓</div></div>
+    <div class="row"><div><div class="name">📖 Leer</div><div class="meta">Todos los días · <i>31 días</i></div></div><div class="det on">✓</div></div>
+    <div class="row"><div><div class="name">🧘 Meditar</div><div class="meta">Lunes a viernes · <i>empieza hoy</i></div></div><div class="det focus"></div></div>
+    <div class="row"><div><div class="name">🏃 Correr</div><div class="meta">Ayer quedó sin marcar</div></div><div class="det"></div></div>
+  </div>
+</div>
+<nav class="nav"><span class="on">Hoy</span><span>Hábitos</span><span>Ajustes</span></nav>
+</body></html>

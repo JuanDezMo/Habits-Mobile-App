@@ -1,0 +1,410 @@
+<title>Habit Tracker Arquitectura</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: una columna de lectura; diagrama de capas arriba, decisiones y ruta por iteración después */
+:root{
+  --bg:#f6f8f6; --surface:#ffffff; --fg:#17201b; --muted:#4d5b53; --line:#dde5df;
+  --accent:#17663f; --accent-soft:#e3f2ea; --warn:#9e4114; --warn-soft:#fbeee6;
+  --display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#111613; --surface:#18201b; --fg:#e6ede8; --muted:#a9b8ae; --line:#2a352e;
+  --accent:#5cc493; --accent-soft:#1d3428; --warn:#f08a4b; --warn-soft:#33241a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#111613; --surface:#18201b; --fg:#e6ede8; --muted:#a9b8ae; --line:#2a352e;
+  --accent:#5cc493; --accent-soft:#1d3428; --warn:#f08a4b; --warn-soft:#33241a; color-scheme:dark}
+
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:960px;margin:0 auto;display:grid;gap:44px}
+h1,h2{font-family:var(--display);text-wrap:balance;margin:0;line-height:1.15}
+h1{font-size:clamp(2rem,5vw,2.8rem)}
+h2{font-size:1.5rem}
+h3{margin:0;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+p{margin:0;max-width:65ch}
+.lead{color:var(--muted);font-size:1.06rem}
+.meta{font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+header{display:grid;gap:12px}
+section{display:grid;gap:18px;padding-top:30px;border-top:1px solid var(--line)}
+code{font-family:var(--mono);font-size:.86em;background:var(--accent-soft);color:var(--accent);padding:2px 6px;border-radius:4px}
+
+/* Capas */
+.layers{display:grid;gap:10px}
+.layer{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:grid;gap:6px}
+.layer.core{border-color:var(--accent)}
+.layer-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:10px}
+.layer-head strong{font-family:var(--display);font-size:1.1rem}
+.layer-head span{font-size:.88rem;color:var(--muted)}
+.arrow{text-align:center;font-family:var(--mono);font-size:.8rem;color:var(--muted)}
+.tags{display:flex;flex-wrap:wrap;gap:6px}
+.tags span{font-family:var(--mono);font-size:.78rem;padding:4px 10px;border-radius:6px;border:1px solid var(--line)}
+
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:10px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.74rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+tr:last-child td{border-bottom:0}
+td:first-child{white-space:nowrap;font-weight:600}
+
+pre{margin:0;font-family:var(--mono);font-size:.82rem;line-height:1.65;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;overflow-x:auto}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+@media (max-width:720px){.two{grid-template-columns:minmax(0,1fr)}}
+.two>div{display:grid;gap:8px;min-width:0;align-content:start}
+
+/* Ruta de iteraciones */
+.road{list-style:none;margin:0;padding:0;display:grid;gap:10px}
+.road li{display:grid;grid-template-columns:3rem minmax(0,1fr) auto;gap:12px;align-items:start;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:12px 14px}
+.road .n{font-family:var(--display);font-size:1.3rem;font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums}
+.road .t{display:grid;gap:2px;min-width:0}
+.road .t b{font-weight:600}
+.road .t span{font-size:.9rem;color:var(--muted)}
+.pill{font-size:.74rem;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;background:var(--accent-soft);color:var(--accent)}
+.road li.turn{border-color:var(--warn);background:var(--warn-soft)}
+.road li.turn .pill{background:var(--warn);color:var(--surface)}
+.road li.turn .n{color:var(--warn)}
+@media (max-width:520px){.road li{grid-template-columns:2.2rem minmax(0,1fr)}.road .pill{grid-column:2;justify-self:start}}
+
+.callout{border:1px solid var(--warn);background:var(--warn-soft);border-radius:12px;padding:14px 16px;display:grid;gap:8px}
+.callout strong{color:var(--warn)}
+ul.plain{margin:0;padding-left:20px;display:grid;gap:6px}
+footer{color:var(--muted);font-size:.85rem;border-top:1px solid var(--line);padding-top:20px}
+</style>
+
+<div class="wrap">
+
+<header>
+  <span class="meta">Arquitectura · v1 · 14 nov 2026</span>
+  <h1>Habit Tracker Arquitectura</h1>
+  <p class="lead">Arquitectura por capas con MVVM para Compose Multiplatform (Android e iOS). Está pensada para que una persona junior aprenda Kotlin, Android y MVVM paso a paso, y respeta los principios SOLID. Empieza simple y crece en una iteración concreta.</p>
+</header>
+
+<section>
+  <h2>Capas</h2>
+  <p>Las dependencias siempre apuntan hacia <code>domain</code>. Domain es Kotlin puro: no conoce Room, Compose, Android ni iOS.</p>
+  <div class="layers">
+    <div class="layer">
+      <div class="layer-head"><strong>UI</strong><span>Lo que el usuario ve y toca (MVVM)</span></div>
+      <div class="tags"><span>TodayScreen</span><span>TodayViewModel</span><span>TodayUiState</span></div>
+    </div>
+    <div class="arrow">↓ usa</div>
+    <div class="layer core">
+      <div class="layer-head"><strong>Domain</strong><span>Las reglas del negocio (A–R)</span></div>
+      <div class="tags"><span>Habit</span><span>CheckIn</span><span>HabitRepository (interfaz)</span><span>StreakCalculator</span><span>HabitValidator</span></div>
+    </div>
+    <div class="arrow">↑ implementa</div>
+    <div class="layer">
+      <div class="layer-head"><strong>Data</strong><span>Cómo y dónde se guardan las cosas</span></div>
+      <div class="tags"><span>HabitRepositoryImpl</span><span>HabitDao</span><span>HabitEntity</span><span>Mappers</span><span>ReminderScheduler (Android / iOS)</span></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Responsabilidades</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Pieza</th><th>Capa</th><th>Hace</th><th>No hace</th></tr></thead>
+    <tbody>
+      <tr><td>Screen</td><td>UI</td><td>Dibuja el UiState y envía eventos al ViewModel</td><td>Lógica, acceso a datos</td></tr>
+      <tr><td>ViewModel</td><td>UI</td><td>Recibe eventos, llama al repositorio y a las reglas, expone <code>StateFlow&lt;UiState&gt;</code></td><td>SQL, código de plataforma</td></tr>
+      <tr><td>UiState</td><td>UI</td><td><code>data class</code> inmutable con todo lo que la pantalla muestra</td><td>Nada más</td></tr>
+      <tr><td>Modelos</td><td>Domain</td><td><code>Habit</code>, <code>CheckIn</code>, <code>User</code>: datos del negocio, sin anotaciones</td><td>Saber de Room</td></tr>
+      <tr><td>Interfaces</td><td>Domain</td><td><code>HabitRepository</code>, <code>ReminderScheduler</code>, <code>PinHasher</code>: qué se necesita, no cómo</td><td>Implementar</td></tr>
+      <tr><td>Reglas</td><td>Domain</td><td>Funciones puras: <code>StreakCalculator</code> (E1–E6), <code>HabitValidator</code> (C1–C3), <code>PinRules</code> (A3, A6)</td><td>Guardar, leer, mostrar</td></tr>
+      <tr><td>RepositoryImpl</td><td>Data</td><td>Implementa la interfaz usando el DAO y convierte Entity ↔ Modelo</td><td>Reglas de negocio</td></tr>
+      <tr><td>DAO + Entity</td><td>Data</td><td>Tablas y consultas con Room</td><td>Reglas de negocio</td></tr>
+      <tr><td>Koin</td><td>DI</td><td>Une cada interfaz con su implementación, en un solo lugar</td><td>Lógica</td></tr>
+      <tr><td>TestTags</td><td>UI</td><td>Constantes con los identificadores de prueba de cada pantalla (<code>pantalla_elemento[_id]</code>)</td><td>Contener datos del usuario</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>SOLID en esta arquitectura</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Principio</th><th>Dónde se ve</th></tr></thead>
+    <tbody>
+      <tr><td>S · Responsabilidad única</td><td>Screen dibuja, ViewModel coordina, Repository guarda, Calculator calcula.</td></tr>
+      <tr><td>O · Abierto / cerrado</td><td>Una regla nueva es una función o UseCase nuevo; no se modifican los existentes.</td></tr>
+      <tr><td>L · Sustitución</td><td><code>FakeHabitRepository</code> reemplaza al real en pruebas sin romper el ViewModel.</td></tr>
+      <tr><td>I · Segregación de interfaces</td><td><code>HabitRepository</code>, <code>CheckInRepository</code> y <code>UserRepository</code> separados, no uno gigante.</td></tr>
+      <tr><td>D · Inversión de dependencias</td><td>El ViewModel depende de interfaces de domain, nunca de Room ni de Android.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<section>
+  <h2>Versión simple y versión con UseCases</h2>
+  <p>Se empieza sin UseCases. Así la persona junior aprende primero lo esencial y descubre por qué hacen falta cuando el código lo pide, en vez de aceptarlos como regla.</p>
+  <div class="two">
+    <div>
+      <h3>Versión simple · iteraciones 0 a 5</h3>
+<pre>Screen
+  ↓
+ViewModel ──→ StreakCalculator
+  ↓           HabitValidator
+HabitRepository (interfaz)
+  ↑
+HabitRepositoryImpl → Room</pre>
+    </div>
+    <div>
+      <h3>Con UseCases · desde la iteración 6</h3>
+<pre>Screen
+  ↓
+ViewModel
+  ↓
+CheckInHabitUseCase
+  ├→ CheckInRepository
+  └→ ReminderScheduler
+  ↑
+Implementaciones → Room / SO</pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Ruta por iteración</h2>
+  <ol class="road">
+    <li><span class="n">0</span><span class="t"><b>Base del proyecto</b><span>Proyecto KMP, Koin, navegación vacía, Room configurado. Aprende: estructura de capas y Kotlin básico.</span></span><span class="pill">Simple</span></li>
+    <li><span class="n">1</span><span class="t"><b>Registro y PIN (A)</b><span>Primer Screen + ViewModel + UiState. <code>PinRules</code> como función pura. Aprende: MVVM, StateFlow, interfaz de repositorio.</span></span><span class="pill">Simple</span></li>
+    <li><span class="n">2</span><span class="t"><b>Hábitos (C)</b><span>Formulario y lista. <code>HabitValidator</code>. Aprende: Room (Entity, DAO), mappers, pruebas con repositorio falso.</span></span><span class="pill">Simple</span></li>
+    <li><span class="n">3</span><span class="t"><b>Sistema de diseño y Ajustes</b><span>Paleta, tipografía, componentes con <code>testTag</code>, diseño visual y pantalla Ajustes (idioma, tema, Cambiar PIN). Aprende: theming de Compose y DataStore.</span></span><span class="pill">Simple</span></li>
+    <li><span class="n">4</span><span class="t"><b>Hoy y check-in (D)</b><span>Lista del día con casillas. Aprende: Flow reactivo desde Room, fechas con kotlinx-datetime.</span></span><span class="pill">Simple</span></li>
+    <li><span class="n">5</span><span class="t"><b>Estadísticas (E)</b><span>Detalle y calendario. <code>StreakCalculator</code> con pruebas unitarias. Aprende: funciones puras y TDD.</span></span><span class="pill">Simple</span></li>
+    <li class="turn"><span class="n">6</span><span class="t"><b>Recordatorios (R) · Se introducen los UseCases</b><span>Una acción ahora toca varias piezas y se repite en varias pantallas. Aprende: UseCases, expect/actual, notificaciones locales.</span></span><span class="pill">Cambio</span></li>
+  </ol>
+</section>
+
+<section>
+  <h2>Por qué el cambio ocurre en la iteración 6</h2>
+  <div class="callout">
+    <p><strong>Señal:</strong> la misma combinación de pasos aparece en más de un ViewModel. Hasta la iteración 5 cada acción toca una sola pieza; con los recordatorios, varias acciones deben coordinar datos y notificaciones a la vez.</p>
+  </div>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Acción</th><th>Pasos que coordina</th><th>Pantallas que la usan</th><th>UseCase</th></tr></thead>
+    <tbody>
+      <tr><td>Marcar</td><td>Guardar check-in + cancelar aviso de hoy (D1, D2, R2)</td><td>Hoy, Detalle</td><td><code>CheckInHabitUseCase</code></td></tr>
+      <tr><td>Desmarcar</td><td>Borrar check-in + reprogramar aviso si no pasó la hora (D3, R3)</td><td>Hoy, Detalle</td><td><code>UncheckHabitUseCase</code></td></tr>
+      <tr><td>Guardar hábito</td><td>Validar + guardar + reprogramar aviso (C1–C3, R7)</td><td>Crear, Editar</td><td><code>SaveHabitUseCase</code></td></tr>
+      <tr><td>Archivar</td><td>Archivar + cancelar aviso (C5, R7)</td><td>Lista, Detalle</td><td><code>ArchiveHabitUseCase</code></td></tr>
+      <tr><td>Abrir la app</td><td>Reprogramar los próximos 7 días (R4)</td><td>Inicio</td><td><code>RescheduleRemindersUseCase</code></td></tr>
+    </tbody>
+  </table>
+  </div>
+  <div class="two">
+    <div>
+      <h3>Antes · lógica en el ViewModel</h3>
+<pre>// TodayViewModel y DetailViewModel
+fun onCheck(id: Long) {
+  checkInRepo.add(id, today)
+  scheduler.cancelToday(id)
+}</pre>
+    </div>
+    <div>
+      <h3>Después · lógica en el UseCase</h3>
+<pre>// Ambos ViewModels
+fun onCheck(id: Long) {
+  checkInHabit(id)
+}</pre>
+    </div>
+  </div>
+  <h3>Cómo se hace el cambio sin romper nada</h3>
+  <ul class="plain">
+    <li>Se crea el UseCase en <code>domain/</code> moviendo los pasos que estaban en el ViewModel.</li>
+    <li>El ViewModel recibe el UseCase en lugar del repositorio y el scheduler.</li>
+    <li>Las pruebas existentes del ViewModel siguen pasando; se agregan pruebas del UseCase.</li>
+    <li>Las acciones de una sola pieza (leer la lista, calcular racha) pueden seguir sin UseCase.</li>
+  </ul>
+</section>
+
+<section>
+  <h2>Stack</h2>
+  <p>Se usa la versión estable más reciente de cada librería al crear el proyecto, declarada en <code>gradle/libs.versions.toml</code>.</p>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Necesidad</th><th>Librería</th><th>Capa</th><th>Por qué</th></tr></thead>
+    <tbody>
+      <tr><td>UI compartida</td><td>Compose Multiplatform</td><td>UI</td><td>Una sola UI para Android e iOS</td></tr>
+      <tr><td>Idiomas</td><td>Compose Multiplatform Resources: <code>values/strings.xml</code> (inglés, por defecto) y <code>values-es/</code></td><td>UI</td><td>Español e inglés; el idioma elegido en Ajustes se aplica al instante (G1, G4)</td></tr>
+      <tr><td>Tema</td><td>MaterialTheme con esquema claro y oscuro; <code>isSystemInDarkTheme()</code> cuando el usuario elige “Igual que el teléfono”</td><td>UI</td><td>Sistema / Claro / Oscuro (G2, G4)</td></tr>
+      <tr><td>Preferencias</td><td>DataStore Preferences (KMP)</td><td>Data</td><td>Idioma y tema existen antes del registro; separados de los datos de negocio</td></tr>
+      <tr><td>ViewModel</td><td>lifecycle-viewmodel-compose (JetBrains)</td><td>UI</td><td>El mismo ViewModel de Android, en código común</td></tr>
+      <tr><td>Navegación</td><td>Navigation Compose + kotlinx-serialization</td><td>UI</td><td>Oficial, rutas tipadas, igual que en Android nativo</td></tr>
+      <tr><td>Asincronía</td><td>kotlinx-coroutines (Flow, StateFlow)</td><td>Todas</td><td>Estándar de Kotlin para datos reactivos</td></tr>
+      <tr><td>Fechas</td><td>kotlinx-datetime</td><td>Domain</td><td>Fechas y zona horaria en código común (E7)</td></tr>
+      <tr><td>Base de datos</td><td>Room KMP + KSP + SQLite bundled</td><td>Data</td><td>Estándar de Android; lo aprendido sirve en cualquier proyecto</td></tr>
+      <tr><td>Inyección</td><td>Koin (core, compose, viewmodel)</td><td>DI</td><td>Simple, sin generar código, soporta KMP</td></tr>
+      <tr><td>Cifrado de PIN</td><td>cryptography-kotlin (PBKDF2)</td><td>Data</td><td>Hash lento con sal; resiste fuerza bruta (A3, A4)</td></tr>
+      <tr><td>Notificaciones</td><td>APIs nativas con expect/actual: AlarmManager (Android), UNUserNotificationCenter (iOS)</td><td>Data</td><td>Control total para cancelar solo el aviso de hoy (R2, R3)</td></tr>
+      <tr><td>Permiso de avisos</td><td>Nativo, dentro de <code>ReminderScheduler</code></td><td>Data</td><td>Un solo permiso, sin librerías extra (R6)</td></tr>
+      <tr><td>Pruebas</td><td>kotlin.test + Turbine + kotlinx-coroutines-test + fakes</td><td>Todas</td><td>Fakes escritos a mano enseñan las interfaces (L de SOLID)</td></tr>
+      <tr><td>Pruebas E2E</td><td>Maestro (un flujo por iteración)</td><td>UI</td><td>Flujos en YAML, fáciles para un junior, en Android e iOS</td></tr>
+      <tr><td>Compatibilidad E2E</td><td>Appium 2: UiAutomator2 (Android), XCUITest (iOS)</td><td>UI</td><td>Sin suite propia en el MVP; los mismos identificadores sirven</td></tr>
+      <tr><td>Identificadores</td><td><code>Modifier.testTag</code> + <code>testTagsAsResourceId</code> en la raíz (Android)</td><td>UI</td><td>Android los expone como resource-id; iOS como accessibilityIdentifier</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Interfaces de plataforma en domain</h3>
+<pre>interface PinHasher {
+  fun hash(secret: String): HashedSecret
+  fun verify(secret: String, hashed: HashedSecret): Boolean
+}
+
+interface SettingsRepository {
+  val language: Flow&lt;AppLanguage&gt;   // ES, EN
+  val theme: Flow&lt;AppTheme&gt;         // SYSTEM, LIGHT, DARK
+  suspend fun setLanguage(l: AppLanguage)
+  suspend fun setTheme(t: AppTheme)
+}
+
+interface ReminderScheduler {
+  suspend fun requestPermission(): Boolean
+  fun canScheduleExact(): Boolean        // Android 12+; iOS siempre true
+  fun openExactAlarmSettings()           // Android 12+; iOS no hace nada
+  fun schedule(habit: Habit, days: List&lt;LocalDate&gt;)
+  fun cancelToday(habitId: Long)
+  fun cancelAll(habitId: Long)
+}</pre>
+</section>
+
+<section>
+  <h2>Modelo de datos</h2>
+  <p>Son 3 tablas en Room. Las fechas y horas se guardan como texto ISO para que se lean fácil al revisar la base, y los <code>TypeConverter</code> las convierten a tipos de Kotlin.</p>
+<pre>user (1 fila)               habit                        check_in
+─────────────────           ─────────────────            ─────────────────
+id                          id                    1 ──*  id
+name                        title                        habitId   FK → habit.id
+email                       description?                 date      "2026-11-14"
+pinHash, pinSalt            emoji                        checkedAt "2026-11-14T21:30:00Z"
+securityQuestion            color                        UNIQUE(habitId, date)
+answerHash, answerSalt      days       "MONDAY,FRIDAY"
+failedAttempts              reminderTime?  "07:00"
+lockedUntil?                isArchived
+createdAt                   createdAt  "2026-11-01"</pre>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo en Kotlin</th><th>En la base</th><th>Regla</th></tr></thead>
+    <tbody>
+      <tr><td>habit.days</td><td><code>Set&lt;DayOfWeek&gt;</code></td><td>Texto <code>"MONDAY,WEDNESDAY,FRIDAY"</code></td><td>C3</td></tr>
+      <tr><td>habit.reminderTime</td><td><code>LocalTime?</code></td><td>Texto <code>"07:00"</code> o null</td><td>R1</td></tr>
+      <tr><td>habit.createdAt</td><td><code>LocalDate</code></td><td>Texto <code>"2026-11-01"</code></td><td>E4</td></tr>
+      <tr><td>habit.isArchived</td><td><code>Boolean</code></td><td>0 / 1</td><td>C5, E6</td></tr>
+      <tr><td>check_in.date</td><td><code>LocalDate</code></td><td>Texto <code>"2026-11-14"</code></td><td>D1</td></tr>
+      <tr><td>check_in (habitId, date)</td><td>—</td><td>Índice único</td><td>D2</td></tr>
+      <tr><td>check_in.checkedAt</td><td><code>Instant</code></td><td>Texto <code>"2026-11-14T21:30:00Z"</code></td><td>D1, D3: un día de ayer marcado hoy sigue visible en «Ayer»</td></tr>
+      <tr><td>user.failedAttempts</td><td><code>Int</code></td><td>Número</td><td>A6</td></tr>
+      <tr><td>user.lockedUntil</td><td><code>Instant?</code></td><td>Texto <code>"2026-11-14T07:00:30Z"</code></td><td>A6</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <h3>Qué no se guarda y por qué</h3>
+  <ul class="plain">
+    <li><b>Rachas y cumplimiento:</b> se calculan con <code>StreakCalculator</code> a partir de los check-ins (E1–E6). Si se guardaran, habría que mantenerlos sincronizados.</li>
+    <li><b>Periodos de archivado:</b> no hacen falta. Los días archivados no tienen check-in y cuentan como no hechos (E6).</li>
+    <li><b>Hora en que la app pasó a segundo plano:</b> solo en memoria (A5). El bloqueo por intentos sí se guarda, para que cerrar la app no lo salte (A6).</li>
+    <li><b>Títulos duplicados:</b> la regla aplica solo entre hábitos activos y Room no la expresa con un índice. Se valida en <code>HabitValidator</code> (C1).</li>
+    <li><b>Duración del bloqueo:</b> se calcula a partir de <code>failedAttempts</code>: 30 s × 2^(fallos − 5).</li>
+    <li><b>Idioma y tema:</b> no van en Room sino en DataStore (<code>language</code>, <code>theme</code>), porque deben existir antes del registro.</li>
+  </ul>
+  <h3>Entity (data) y modelo (domain)</h3>
+  <div class="two">
+    <div>
+<pre>// data/local/HabitEntity.kt
+// HabitConverters guarda estos tipos como texto
+@Entity(tableName = "habit")
+data class HabitEntity(
+  @PrimaryKey(autoGenerate = true)
+  val id: Long = 0,
+  val title: String,
+  val description: String?,
+  val emoji: String,
+  val color: String,
+  val days: Set&lt;DayOfWeek&gt;,
+  val reminderTime: LocalTime?,
+  val isArchived: Boolean,
+  val createdAt: LocalDate
+)</pre>
+    </div>
+    <div>
+<pre>// domain/habit/Habit.kt
+data class Habit(
+  val id: Long,
+  val title: String,
+  val description: String?,
+  val emoji: String,
+  val color: String,
+  val days: Set&lt;DayOfWeek&gt;,
+  val reminderTime: LocalTime?,
+  val isArchived: Boolean,
+  val createdAt: LocalDate
+)
+// HabitMapper convierte uno en otro</pre>
+    </div>
+  </div>
+</section>
+
+<section>
+  <h2>Registro de decisiones</h2>
+  <div class="tbl">
+  <table>
+    <thead><tr><th>Fecha</th><th>Decisión</th><th>Motivo</th></tr></thead>
+    <tbody>
+      <tr><td>14 nov 2026</td><td>Arquitectura por capas UI / Domain / Data con MVVM</td><td>Sencilla, escalable y alineada a SOLID</td></tr>
+      <tr><td>14 nov 2026</td><td>Domain desde el inicio, solo con modelos, interfaces y reglas puras</td><td>Enseña inversión de dependencias con pocos conceptos</td></tr>
+      <tr><td>14 nov 2026</td><td>Sin UseCases en las iteraciones 0 a 5</td><td>Reducir la carga inicial para una persona junior</td></tr>
+      <tr><td>14 nov 2026</td><td>Introducir UseCases en la iteración 6 (la 3 pasa a ser Sistema de diseño)</td><td>Primera vez que una acción coordina varias piezas en varias pantallas</td></tr>
+      <tr><td>14 nov 2026</td><td>Room KMP, Koin, Navigation Compose</td><td>Estándares de Android; el aprendizaje es transferible</td></tr>
+      <tr><td>14 nov 2026</td><td>PBKDF2 con cryptography-kotlin para PIN y respuesta</td><td>Un PIN de 4 dígitos con SHA-256 se rompe al instante</td></tr>
+      <tr><td>14 nov 2026</td><td>Notificaciones y permiso con APIs nativas (expect/actual)</td><td>Control fino de R2/R3 y aprendizaje de código por plataforma</td></tr>
+      <tr><td>14 nov 2026</td><td>Pruebas con fakes escritos a mano, sin mocks</td><td>Hace visibles las interfaces y la sustitución</td></tr>
+      <tr><td>14 nov 2026</td><td>Android 12+: pedir “Alarmas y recordatorios” junto al permiso de notificaciones; si se niega, alarma aproximada</td><td>Avisos a la hora exacta, sin bloquear la función si el usuario no acepta</td></tr>
+      <tr><td>14 nov 2026</td><td>3 tablas: user, habit, check_in; rachas y cumplimiento calculados</td><td>Una sola fuente de verdad; nada que sincronizar</td></tr>
+      <tr><td>14 nov 2026</td><td>Días, fechas y horas como texto legible con TypeConverters</td><td>Fácil de depurar; enseña TypeConverters</td></tr>
+      <tr><td>14 nov 2026</td><td>Riesgo aceptado: iOS limita a 64 avisos pendientes; se mantienen 7 días programados</td><td>Con 9 hábitos diarios o menos no hay impacto; se revisa si se supera</td></tr>
+      <tr><td>14 nov 2026</td><td>Identificadores <code>testTag</code> en elementos interactivos y estados clave, visibles en todas las versiones</td><td>Pruebas E2E con Maestro y Appium sobre la misma app que se publica</td></tr>
+      <tr><td>14 nov 2026</td><td>Español e inglés, elegible en Ajustes; la primera vez, el del teléfono (inglés si es otro)</td><td>El usuario no queda atado al idioma del teléfono (G1, G4)</td></tr>
+      <tr><td>14 nov 2026</td><td>Tema Sistema / Claro / Oscuro en Ajustes; por defecto, el del teléfono</td><td>G2, G4; paleta y pantalla Ajustes en la iteración 3</td></tr>
+      <tr><td>14 nov 2026</td><td>Preferencias en DataStore; cambio de idioma al instante con reprogramación de avisos</td><td>Existen antes del registro; los avisos deben quedar en el idioma elegido</td></tr>
+      <tr><td>14 nov 2026</td><td>Cambiar PIN en Ajustes (A8), con el mismo bloqueo de A6</td><td>Evita adivinar el PIN con la app abierta</td></tr>
+      <tr><td>14 nov 2026</td><td>Sin integración continua (CI) por ahora</td><td>Se define en una etapa posterior</td></tr>
+      <tr><td>15 nov 2026</td><td>Módulos <code>shared</code> (código común) + <code>androidApp</code> + <code>iosApp</code></td><td>AGP 9 exige que la app de Android viva en su propio módulo</td></tr>
+      <tr><td>15 nov 2026</td><td><code>AppDatabase</code> se crea en la iteración 1 con la tabla <code>user</code></td><td>Room exige al menos una tabla; en la iteración 0 solo se configura</td></tr>
+      <tr><td>15 nov 2026</td><td>Respaldo en la nube de Android desactivado (<code>allowBackup=false</code>)</td><td>Los datos y el PIN no salen del teléfono</td></tr>
+      <tr><td>15 nov 2026</td><td>Nombre visible provisional “Habit Tracker”; minSdk 26, iOS 16</td><td>El nombre definitivo se decide en la iteración 3</td></tr>
+      <tr><td>15 nov 2026</td><td>Migraciones con <code>AutoMigration</code> a partir de los esquemas exportados (v1 → v2 al agregar <code>habit</code>)</td><td>Se conservan los datos del usuario; es como se trabaja en producción</td></tr>
+      <tr><td>15 nov 2026</td><td><code>habit.reminderTime</code> se crea en la iteración 2 y queda en null hasta la 6</td><td>Evita una migración solo para esa columna</td></tr>
+      <tr><td>15 nov 2026</td><td>kotlinx-datetime entra en la iteración 2</td><td><code>Habit</code> usa <code>DayOfWeek</code> y <code>LocalDate</code></td></tr>
+      <tr><td>15 nov 2026</td><td>En la iteración 2 se archiva desde Editar hábito, con confirmación; en la 5 el botón pasa a Detalle</td><td>El Detalle todavía no existe; se mantiene el diálogo del prototipo</td></tr>
+      <tr><td>15 nov 2026</td><td>Hasta la iteración 5, tocar un hábito activo abre Editar; los archivados no se editan, solo se desarchivan</td><td>El Detalle todavía no existe</td></tr>
+      <tr><td>15 nov 2026</td><td>Sistema de diseño «Mapa de parque»: color plano, un lóbulo por pantalla, cápsulas; Bricolage Grotesque en un solo peso; sin Dynamic Color</td><td>Elegido en 3 rondas de direcciones; misma identidad en Android e iOS</td></tr>
+      <tr><td>15 nov 2026</td><td>Colores de hábito (C2): coral, azul, lila, amarillo, verde, naranja, turquesa y rosa, siempre con texto oscuro</td><td>Paleta del sistema de diseño con contraste AA</td></tr>
+      <tr><td>15 nov 2026</td><td>Guardar fijo abajo en el formulario; día no cumplido en gris en el calendario</td><td>Guardar siempre visible; sin culpa al mostrar fallos</td></tr>
+      <tr><td>15 nov 2026</td><td>Barra inferior Hoy / Hábitos / Ajustes desde la iteración 3</td><td>Ajustes es la tercera pestaña; Hoy y Hábitos dejan sus botones de navegación</td></tr>
+      <tr><td>15 nov 2026</td><td>Cambiar PIN (A8): al terminar vuelve a Ajustes con el aviso «PIN actualizado»; con bloqueo (A6) se queda en la misma pantalla con cuenta regresiva</td><td>La sesión sigue abierta; mismo comportamiento que el PIN de entrada</td></tr>
+      <tr><td>14 nov 2026</td><td>Identificador <code>co.com.buildinghabittracker</code></td><td>Android applicationId e iOS bundle ID (G3)</td></tr>
+      <tr><td>14 nov 2026</td><td>Maestro a demanda, con validación previa de ejecución y escenarios</td><td>Control del usuario sobre cuándo y qué se prueba</td></tr>
+      <tr><td>14 nov 2026</td><td>Maestro por iteración; Appium solo compatible</td><td>Un solo lenguaje de E2E para el junior; QA puede construir Appium aparte</td></tr>
+      <tr><td>14 nov 2026</td><td>Hoy: tocar toda la cápsula marca o desmarca; el detalle se abre desde Hábitos (iteración 5)</td><td>Blanco grande y fácil de tocar de noche</td></tr>
+      <tr><td>14 nov 2026</td><td>Desmarcar (D3) es directo y muestra «Desmarcado · Deshacer» unos 10 s; el aviso se descarta al salir de Hoy</td><td>Corrige toques accidentales sin pedir confirmación</td></tr>
+      <tr><td>14 nov 2026</td><td>Hoy solo muestra los hábitos que tocan hoy, en orden de creación; no se reordenan al marcar</td><td>El dedo no pierde el siguiente hábito; «2 de 3» cuenta solo los de hoy</td></tr>
+      <tr><td>14 nov 2026</td><td>Sección «Ayer»: los de ayer sin marcar; al marcarlos quedan con ✓ hasta medianoche para poder desmarcarlos. Se sabe con <code>check_in.checkedAt</code></td><td>D1 y D3; no se pierden al reabrir la app</td></tr>
+      <tr><td>14 nov 2026</td><td>Todo marcado → aviso «¡Listo por hoy!»</td><td>Corto y sin exagerar</td></tr>
+      <tr><td>14 nov 2026</td><td>Racha de la iteración 4 = E1 y E2 con los días actuales del hábito; E6 (días archivados) pasa a la iteración 5 con una tabla de periodos archivados</td><td>Hoy solo se guarda si está archivado ahora, no desde cuándo</td></tr>
+      <tr><td>14 nov 2026</td><td>Tabla <code>check_in</code> v3 (AutoMigration 2→3): índice único (habitId, date), llave foránea a <code>habit</code> e inserción con IGNORE</td><td>La base misma impide dos check-ins el mismo día (D2)</td></tr>
+      <tr><td>14 nov 2026</td><td><code>TodayProvider</code>: el día de hoy como Flow que revisa la fecha cada minuto</td><td>Hoy cambia solo a medianoche, aunque el teléfono se haya dormido; en las pruebas se mueve a mano</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<footer>Habit Tracker · Arquitectura v1. Complementa el documento “Habit Tracker MVP” con las reglas de negocio A–R.</footer>
+
+</div>

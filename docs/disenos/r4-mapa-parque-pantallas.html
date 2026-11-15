@@ -1,0 +1,213 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Mapa de parque · Pantallas</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,700&display=swap" rel="stylesheet">
+<style>
+/* Mapa de parque: color plano sin degradados ni sombras; un lóbulo domina cada pantalla;
+   controles en cápsulas; el chip redondo cruza al inicio de la cápsula cuando está activo. */
+:root{--water:#F5F1E4;--land:#8ED462;--ink:#2C2E2A;--yellow:#F5E211;--coral:#FF705D;--blue:#2BA0FF;--lilac:#EBC1FF;
+  --orange:#FFA24C;--teal:#3FD0B6;--pink:#FF9FC8;--rule:#E3DECD}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:#D9D4C4;font-family:"Bricolage Grotesque",system-ui,sans-serif;color:var(--ink);padding:24px;display:flex;flex-wrap:wrap;gap:28px;width:1700px}
+figure{display:grid;gap:10px}
+figcaption{font-size:15px}
+.ph{width:390px;height:844px;background:var(--water);position:relative;overflow:hidden;border-radius:28px}
+.lobe{position:absolute;pointer-events:none}
+.z{position:relative}
+.pad{padding:58px 22px 0}
+.date{font-size:14px}
+.h1{font-size:44px;line-height:.95;letter-spacing:-.05em}
+.h2{font-size:30px;line-height:.95;letter-spacing:-.04em}
+.big{font-size:118px;line-height:.85;letter-spacing:-.06em}
+.big small{font-size:46px;letter-spacing:-.03em}
+.sub{font-size:15px;margin-top:6px}
+.pill{display:inline-flex;align-items:center;gap:8px;border-radius:999px;padding:9px 16px;font-size:15px}
+.y{background:var(--yellow)}.k{background:var(--ink);color:var(--water)}
+.cap{height:64px;border-radius:999px;display:flex;align-items:center;gap:12px;padding:0 8px 0 22px;font-size:19px;letter-spacing:-.03em}
+.cap .t{flex:1}.cap .t small{display:block;font-size:13px;letter-spacing:0;opacity:.8}
+.chip{width:48px;height:48px;border-radius:50%;background:var(--water);display:grid;place-items:center;font-size:22px;flex:none}
+.cap.done{padding:0 22px 0 8px}.cap.done .chip{background:var(--ink);color:var(--water)}
+.list{display:grid;gap:12px;padding:0 18px}
+.nav{position:absolute;left:12px;right:12px;bottom:18px;height:64px;background:var(--ink);border-radius:999px;display:flex;justify-content:space-around;align-items:center;color:var(--water);font-size:15px}
+.nav .on{background:var(--yellow);color:var(--ink);border-radius:999px;padding:10px 18px}
+.field{background:#fff;border-radius:22px;padding:12px 18px}
+.field label{font-size:13px;display:block}.field div{font-size:19px;margin-top:2px}
+.field.err{box-shadow:inset 0 0 0 2px var(--coral)}
+.err-t{font-size:13px;color:#B23A2A;margin:6px 18px 0}
+.btn{height:60px;border-radius:999px;background:var(--ink);color:var(--water);display:flex;align-items:center;justify-content:space-between;padding:0 8px 0 24px;font-size:19px}
+.btn .chip{background:var(--yellow);color:var(--ink)}
+.dots{display:flex;gap:14px;justify-content:center}
+.dots i{width:18px;height:18px;border-radius:50%;border:2px solid var(--ink)}.dots i.on{background:var(--ink)}
+.keys{display:grid;grid-template-columns:repeat(3,84px);gap:14px 22px;justify-content:center}
+.keys b{height:84px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:30px;font-weight:700}
+.keys b.n{background:transparent;font-size:15px}
+.seg{display:flex;background:#fff;border-radius:999px;padding:5px;gap:4px}
+.seg span{flex:1;text-align:center;border-radius:999px;padding:10px 0;font-size:15px}.seg .on{background:var(--ink);color:var(--water)}
+.fab{position:absolute;right:20px;bottom:98px;width:66px;height:66px;border-radius:50%;background:var(--coral);display:grid;place-items:center;font-size:34px}
+.stamp{border:2px solid var(--ink);border-radius:999px;padding:2px 10px;font-size:11px;letter-spacing:.08em;transform:rotate(-6deg)}
+.lbl{font-size:13px;margin:0 0 8px}
+.emos{display:grid;grid-template-columns:repeat(6,1fr);gap:8px}
+.emos b{height:48px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:22px;font-weight:400}
+.emos b.on{background:var(--ink)}
+.cols{display:flex;gap:8px;flex-wrap:wrap}
+.cols b{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font-size:20px}
+.days{display:flex;gap:6px}.days b{width:44px;height:44px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:16px}
+.days b.on{background:var(--ink);color:var(--water)}
+.dock{position:absolute;left:0;right:0;bottom:0;background:var(--water);padding:12px 18px 22px;border-top:1px solid var(--rule)}
+.scrim{position:absolute;inset:0;background:rgba(44,46,42,.55)}
+.sheet{position:absolute;left:16px;right:16px;bottom:24px;background:var(--water);border-radius:32px;padding:24px 22px;display:grid;gap:14px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 18px}
+.stat{border-radius:26px;padding:14px 16px}.stat b{display:block;font-size:40px;letter-spacing:-.05em;line-height:1}.stat span{font-size:13px}
+.cal{margin:12px 18px 0;background:#fff;border-radius:26px;padding:14px}
+.calg{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;font-size:13px}
+.calg i{font-style:normal;height:34px;border-radius:50%;display:grid;place-items:center}
+.calg .d{background:var(--land)}.calg .m{box-shadow:inset 0 0 0 2px var(--coral)}.calg .x{color:#B5AE9C}.calg .t{background:var(--ink);color:var(--water)}
+.row{display:flex;justify-content:space-between;align-items:center;background:#fff;border-radius:999px;padding:8px 8px 8px 22px;font-size:17px}
+/* oscuro */
+.dark{--water:#1E211C;--ink:#F2EEDF;--rule:#33372F;--land:#6FB847}
+.dark .cap,.dark .pill.y,.dark .nav .on{color:#1E211C}
+.dark .nav{background:#F2EEDF;color:#1E211C}
+.dark .cap.done .chip{background:#1E211C;color:#F2EEDF}
+</style></head><body>
+
+<!-- 1 · Registro -->
+<figure><figcaption>1 · Registro (A1, A2)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-30px;top:-40px" width="460" height="380" viewBox="0 0 460 380"><path fill="#FF9FC8" d="M0 0H460V250C410 300 350 260 300 300C240 350 170 380 110 340C60 310 30 350 0 330Z"/></svg>
+  <div class="pad z"><span class="pill k">Paso 1 de 4</span><div class="h1" style="margin-top:22px">Crea tu<br>cuenta</div><div class="sub">Tus datos se guardan solo en este teléfono.</div></div>
+  <div class="list" style="position:absolute;top:400px;left:0;right:0">
+    <div class="field"><label>Nombre</label><div>Ana</div></div>
+    <div class="field err"><label>Email</label><div>ana@correo</div></div>
+    <div class="err-t">Escribe un email válido, por ejemplo ana@correo.com.</div>
+  </div>
+  <div style="position:absolute;left:18px;right:18px;bottom:30px" class="btn">Continuar<span class="chip">→</span></div>
+</div></figure>
+
+<!-- 2 · PIN -->
+<figure><figcaption>2 · Entrar con PIN (A5, A6)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-20px;top:-30px" width="440" height="330" viewBox="0 0 440 330"><path fill="#8ED462" d="M0 0H440V230C380 270 330 220 270 260C210 300 140 330 80 300C40 280 20 300 0 290Z"/></svg>
+  <div class="pad z"><div class="date">jueves 14 de noviembre</div><div class="h1" style="margin-top:6px">Hola,<br>Ana</div><div class="sub">Ingresa tu PIN</div></div>
+  <div class="z" style="position:absolute;top:330px;left:0;right:0;display:grid;gap:18px;justify-items:center">
+    <div class="dots"><i class="on"></i><i class="on"></i><i></i><i></i></div>
+    <span class="pill y">PIN incorrecto · te quedan 3 intentos</span>
+    <div class="keys"><b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b>6</b><b>7</b><b>8</b><b>9</b><b class="n">Olvidé<br>mi PIN</b><b>0</b><b class="n">Borrar</b></div>
+  </div>
+</div></figure>
+
+<!-- 3 · Hoy -->
+<figure><figcaption>3 · Hoy (D1–D3, E1)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-40px;top:-60px" width="520" height="420" viewBox="0 0 520 420"><path fill="#8ED462" d="M0 0H520V300C470 330 430 300 380 340C330 380 260 420 190 380C140 352 120 400 60 392C20 386 0 360 0 330Z"/><ellipse cx="400" cy="250" rx="44" ry="30" fill="#F5F1E4"/></svg>
+  <div class="pad z"><div class="date">jueves 14 de noviembre</div><div class="h2" style="margin-top:6px">Hola, Ana</div></div>
+  <div class="z big" style="margin:12px 22px 0">2<small> de 3</small></div>
+  <div class="z" style="margin:12px 22px 0"><span class="pill y">Te falta Meditar</span></div>
+  <div class="list" style="position:absolute;top:378px;left:0;right:0">
+    <div class="cap done" style="background:var(--coral)"><div class="chip">✓</div><div class="t">🏋️ Gym<small>🔥 6 días</small></div></div>
+    <div class="cap done" style="background:var(--blue)"><div class="chip">✓</div><div class="t">📖 Leer<small>🔥 31 días</small></div></div>
+    <div class="cap" style="background:var(--lilac)"><div class="t">🧘 Meditar<small>toca hoy</small></div><div class="chip"></div></div>
+    <div class="lbl" style="margin:6px 4px 0">Ayer sin marcar</div>
+    <div class="cap" style="background:#fff"><div class="t">🏃 Correr<small>aún puedes marcar ayer</small></div><div class="chip" style="background:var(--water)"></div></div>
+  </div>
+  <div class="nav"><span class="on">Hoy</span><span>Hábitos</span><span>Ajustes</span></div>
+</div></figure>
+
+<!-- 4 · Hábitos activos -->
+<figure><figcaption>4 · Mis hábitos · activos (C5)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-30px;top:-50px" width="470" height="300" viewBox="0 0 470 300"><path fill="#2BA0FF" d="M0 0H470V200C420 240 360 200 300 240C240 280 160 300 100 270C50 245 20 270 0 260Z"/></svg>
+  <div class="pad z"><div class="h1">Mis<br>hábitos</div><div class="sub">4 activos · 1 archivado</div></div>
+  <div class="z" style="position:absolute;top:262px;left:18px;right:18px"><div class="seg"><span class="on">Activos (4)</span><span>Archivados (1)</span></div></div>
+  <div class="list" style="position:absolute;top:340px;left:0;right:0">
+    <div class="cap" style="background:var(--coral)"><div class="t">🏋️ Gym<small>L · X · V</small></div><div class="chip">›</div></div>
+    <div class="cap" style="background:var(--blue)"><div class="t">📖 Leer<small>Todos los días</small></div><div class="chip">›</div></div>
+    <div class="cap" style="background:var(--lilac)"><div class="t">🧘 Meditar<small>L a V</small></div><div class="chip">›</div></div>
+    <div class="cap" style="background:var(--teal)"><div class="t">💧 Agua<small>Todos los días</small></div><div class="chip">›</div></div>
+  </div>
+  <div class="fab">+</div>
+  <div class="nav"><span>Hoy</span><span class="on">Hábitos</span><span>Ajustes</span></div>
+</div></figure>
+
+<!-- 5 · Archivados -->
+<figure><figcaption>5 · Archivados · sellados, no borrados</figcaption><div class="ph">
+  <svg class="lobe" style="left:-30px;top:-50px" width="470" height="300" viewBox="0 0 470 300"><path fill="#2BA0FF" d="M0 0H470V200C420 240 360 200 300 240C240 280 160 300 100 270C50 245 20 270 0 260Z"/></svg>
+  <div class="pad z"><div class="h1">Mis<br>hábitos</div><div class="sub">4 activos · 1 archivado</div></div>
+  <div class="z" style="position:absolute;top:262px;left:18px;right:18px"><div class="seg"><span>Activos (4)</span><span class="on">Archivados (1)</span></div></div>
+  <div class="list" style="position:absolute;top:340px;left:0;right:0">
+    <div class="cap" style="background:#fff"><div class="t">🏃 Correr<small>L · X · V</small></div><span class="stamp">ARCHIVADO</span><span class="pill k" style="margin-left:6px">Desarchivar</span></div>
+  </div>
+  <div class="z" style="position:absolute;left:18px;right:18px;bottom:100px"><span class="pill y" style="width:100%;justify-content:center">Ya tienes un hábito activo con ese título.</span></div>
+  <div class="nav"><span>Hoy</span><span class="on">Hábitos</span><span>Ajustes</span></div>
+</div></figure>
+
+<!-- 6 · Formulario -->
+<figure><figcaption>6 · Nuevo hábito · Guardar fijo abajo (C1–C3)</figcaption><div class="ph">
+  <div class="pad"><span class="pill" style="background:#fff">← Volver</span><div class="h2" style="margin-top:16px">Nuevo hábito</div></div>
+  <div class="list" style="margin-top:16px">
+    <div class="field"><label>Título</label><div>Leer</div></div>
+    <div class="field"><label>Descripción (opcional)</label><div style="opacity:.45">20 páginas antes de dormir</div></div>
+    <div><div class="lbl">Emoji</div><div class="emos"><b>🏋️</b><b class="on">📖</b><b>🧘</b><b>🏃</b><b>💧</b><b>🥗</b><b>😴</b><b>✍️</b><b>🎸</b><b>🧹</b><b>💊</b><b>🌱</b></div></div>
+    <div><div class="lbl">Color</div><div class="cols"><b style="background:var(--coral)"></b><b style="background:var(--blue);box-shadow:0 0 0 3px var(--water),0 0 0 5px var(--ink)">✓</b><b style="background:var(--lilac)"></b><b style="background:var(--yellow)"></b><b style="background:var(--land)"></b><b style="background:var(--orange)"></b><b style="background:var(--teal)"></b><b style="background:var(--pink)"></b></div></div>
+    <div><div class="lbl">Días · <u>Todos los días</u></div><div class="days"><b class="on">L</b><b class="on">M</b><b class="on">X</b><b class="on">J</b><b class="on">V</b><b>S</b><b>D</b></div></div>
+  </div>
+  <div class="dock"><div class="btn">Guardar<span class="chip">✓</span></div></div>
+</div></figure>
+
+<!-- 7 · Archivar -->
+<figure><figcaption>7 · Editar · confirmar archivar (C5)</figcaption><div class="ph">
+  <div class="pad"><span class="pill" style="background:#fff">← Volver</span><div class="h2" style="margin-top:16px">Editar hábito</div></div>
+  <div class="list" style="margin-top:16px"><div class="field"><label>Título</label><div>Gym</div></div></div>
+  <div class="scrim"></div>
+  <div class="sheet"><div class="h2">¿Archivar “Gym”?</div>
+    <div class="sub" style="margin:0">Dejará de aparecer en Hoy y se cancelará su recordatorio. El historial se conserva y los días archivados cuentan como no hechos.</div>
+    <div class="btn" style="background:var(--coral);color:var(--ink)">Archivar<span class="chip" style="background:var(--ink);color:var(--water)">✓</span></div>
+    <span class="pill" style="justify-content:center;background:#fff">Cancelar</span></div>
+</div></figure>
+
+<!-- 8 · Detalle -->
+<figure><figcaption>8 · Detalle y estadísticas (E1–E7)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-30px;top:-40px" width="470" height="330" viewBox="0 0 470 330"><path fill="#FF705D" d="M0 0H470V230C420 270 360 230 300 270C240 310 160 330 100 300C50 275 20 300 0 290Z"/></svg>
+  <div class="pad z"><span class="pill" style="background:var(--water)">← Volver</span><div class="h1" style="margin-top:14px">🏋️ Gym</div><div class="sub">Lunes, miércoles y viernes · desde el 1 nov</div></div>
+  <div class="stats z" style="margin-top:46px">
+    <div class="stat" style="background:var(--yellow)"><b>6</b><span>racha actual</span></div>
+    <div class="stat" style="background:var(--lilac)"><b>9</b><span>mejor racha</span></div>
+    <div class="stat" style="background:var(--land);grid-column:span 2"><b>86%</b><span>cumplimiento · 6 de 7 días programados</span></div>
+  </div>
+  <div class="cal"><div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:16px"><span>‹</span><span>Noviembre 2026</span><span>›</span></div>
+    <div class="calg"><i>L</i><i>M</i><i>X</i><i>J</i><i>V</i><i>S</i><i>D</i>
+      <i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x"></i><i class="x">1</i><i class="x">2</i>
+      <i class="d">3</i><i class="x">4</i><i class="m">5</i><i class="x">6</i><i class="d">7</i><i class="x">8</i><i class="x">9</i>
+      <i class="d">10</i><i class="x">11</i><i class="d">12</i><i class="t">13</i><i class="x">14</i><i class="x">15</i><i class="x">16</i></div></div>
+</div></figure>
+
+<!-- 9 · Ajustes -->
+<figure><figcaption>9 · Ajustes (G4, A8)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-30px;top:-50px" width="470" height="280" viewBox="0 0 470 280"><path fill="#F5E211" d="M0 0H470V190C420 230 360 190 300 230C240 270 160 280 100 250C50 228 20 250 0 240Z"/></svg>
+  <div class="pad z"><div class="h1">Ajustes</div></div>
+  <div class="list" style="position:absolute;top:270px;left:0;right:0">
+    <div class="lbl" style="margin:0 4px">Idioma</div><div class="seg"><span class="on">Español</span><span>English</span></div>
+    <div class="lbl" style="margin:8px 4px 0">Tema</div><div class="seg"><span class="on">Teléfono</span><span>Claro</span><span>Oscuro</span></div>
+    <div class="lbl" style="margin:8px 4px 0">Seguridad</div><div class="row">Cambiar PIN<span class="chip">›</span></div>
+  </div>
+  <div class="nav"><span>Hoy</span><span>Hábitos</span><span class="on">Ajustes</span></div>
+</div></figure>
+
+<!-- 10 · Hoy oscuro -->
+<figure><figcaption>10 · Hoy · modo oscuro (G2)</figcaption><div class="ph dark">
+  <svg class="lobe" style="left:-40px;top:-60px" width="520" height="420" viewBox="0 0 520 420"><path fill="#6FB847" d="M0 0H520V300C470 330 430 300 380 340C330 380 260 420 190 380C140 352 120 400 60 392C20 386 0 360 0 330Z"/><ellipse cx="400" cy="250" rx="44" ry="30" fill="#1E211C"/></svg>
+  <div class="pad z" style="color:#1E211C"><div class="date">jueves 14 de noviembre</div><div class="h2" style="margin-top:6px">Hola, Ana</div></div>
+  <div class="z big" style="margin:12px 22px 0;color:#1E211C">2<small> de 3</small></div>
+  <div class="z" style="margin:12px 22px 0"><span class="pill y">Te falta Meditar</span></div>
+  <div class="list" style="position:absolute;top:378px;left:0;right:0">
+    <div class="cap done" style="background:var(--coral)"><div class="chip">✓</div><div class="t">🏋️ Gym<small>🔥 6 días</small></div></div>
+    <div class="cap done" style="background:var(--blue)"><div class="chip">✓</div><div class="t">📖 Leer<small>🔥 31 días</small></div></div>
+    <div class="cap" style="background:var(--lilac)"><div class="t">🧘 Meditar<small>toca hoy</small></div><div class="chip"></div></div>
+  </div>
+  <div class="nav"><span class="on">Hoy</span><span>Hábitos</span><span>Ajustes</span></div>
+</div></figure>
+
+<!-- 11 · Hoy vacío -->
+<figure><figcaption>11 · Hoy · sin hábitos (primera vez)</figcaption><div class="ph">
+  <svg class="lobe" style="left:-40px;top:-60px" width="520" height="520" viewBox="0 0 520 520"><path fill="#8ED462" d="M0 0H520V380C470 420 420 380 370 430C320 480 250 520 180 480C130 452 110 500 50 492C20 486 0 460 0 430Z"/><ellipse cx="260" cy="300" rx="120" ry="80" fill="#F5F1E4"/></svg>
+  <div class="pad z"><div class="date">jueves 14 de noviembre</div><div class="h2" style="margin-top:6px">Hola, Ana</div></div>
+  <div class="z" style="position:absolute;top:262px;left:0;right:0;text-align:center;font-size:22px;letter-spacing:-.03em">Aquí aparecerán<br>tus hábitos de hoy</div>
+  <div style="position:absolute;left:18px;right:18px;top:560px" class="btn">Crear mi primer hábito<span class="chip">+</span></div>
+  <div class="nav"><span class="on">Hoy</span><span>Hábitos</span><span>Ajustes</span></div>
+</div></figure>
+
+</body></html>

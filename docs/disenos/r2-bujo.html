@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>Bullet journal · Hoy</title>
+<link href="https://fonts.googleapis.com/css2?family=Karla:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+/* Bullet journal punteado: grilla de puntos, cada día un punto que se rellena con marcador */
+:root{--ground:#FBFBFA;--ink:#1D1F21;--muted:#7A7E83;--dot:#CBCED2}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;font-family:Karla,system-ui,sans-serif;color:var(--ink);
+  background:var(--ground) radial-gradient(circle,var(--dot) 1px,transparent 1.2px) 0 0/20px 20px}
+.head{padding:58px 20px 0}
+.date{font-size:13px;color:var(--muted);font-weight:700}
+.hi{font-size:28px;font-weight:800;margin-top:2px}
+.goal{display:flex;align-items:center;gap:10px;margin-top:16px}
+.goal b{width:22px;height:22px;border-radius:50%;border:2px solid var(--ink)}
+.goal b.on{background:var(--ink)}
+.goal span{font-weight:800;font-size:14px;margin-left:6px}
+.card{margin:20px 16px 0;background:#fff;border-radius:16px;padding:6px 16px;box-shadow:0 0 0 1px #ECEDEF}
+.row{display:grid;grid-template-columns:1fr auto;gap:8px;padding:14px 0;border-bottom:1px solid #F0F1F2;align-items:center}
+.row:last-child{border:0}
+.name{font-weight:800;font-size:16px}
+.name small{font-weight:700;color:var(--muted);font-size:12px;margin-left:6px}
+.week{display:flex;gap:7px;margin-top:8px}
+.week i{width:14px;height:14px;border-radius:50%;border:2px solid var(--dot)}
+.week i.t{border-color:var(--ink)}
+.chk{width:44px;height:44px;border-radius:50%;border:2px solid var(--ink);display:grid;place-items:center;font-size:22px}
+.nav{position:absolute;left:0;right:0;bottom:0;height:84px;background:#fff;border-top:1px solid #ECEDEF;display:flex;justify-content:space-around;padding-top:14px;font-size:12px;font-weight:800;color:var(--muted)}
+.nav .on{color:var(--ink)}
+</style></head><body>
+<header class="head"><div class="date">Jueves 14 de noviembre</div><div class="hi">Hola, Ana</div>
+  <div class="goal"><b class="on"></b><b class="on"></b><b></b><span>2 de 3 hoy</span></div></header>
+<div class="card">
+  <div class="row"><div><div class="name">🏋️ Gym <small>6 seguidos</small></div>
+    <div class="week"><i style="background:#2E8B57;border-color:#2E8B57"></i><i></i><i style="background:#2E8B57;border-color:#2E8B57"></i><i></i><i style="background:#2E8B57;border-color:#2E8B57"></i><i></i><i class="t" style="background:#2E8B57"></i></div></div>
+    <div class="chk" style="background:#2E8B57;border-color:#2E8B57;color:#fff">✓</div></div>
+  <div class="row"><div><div class="name">📖 Leer <small>31 seguidos</small></div>
+    <div class="week"><i style="background:#3A7BD5;border-color:#3A7BD5"></i><i style="background:#3A7BD5;border-color:#3A7BD5"></i><i style="background:#3A7BD5;border-color:#3A7BD5"></i><i style="background:#3A7BD5;border-color:#3A7BD5"></i><i style="background:#3A7BD5;border-color:#3A7BD5"></i><i style="background:#3A7BD5;border-color:#3A7BD5"></i><i class="t" style="background:#3A7BD5"></i></div></div>
+    <div class="chk" style="background:#3A7BD5;border-color:#3A7BD5;color:#fff">✓</div></div>
+  <div class="row"><div><div class="name">🧘 Meditar <small>empieza hoy</small></div>
+    <div class="week"><i style="background:#8E44AD;border-color:#8E44AD"></i><i style="background:#8E44AD;border-color:#8E44AD"></i><i></i><i style="background:#8E44AD;border-color:#8E44AD"></i><i style="background:#8E44AD;border-color:#8E44AD"></i><i></i><i class="t"></i></div></div>
+    <div class="chk"></div></div>
+</div>
+<nav class="nav"><div class="on">Hoy</div><div>Hábitos</div><div>Ajustes</div></nav>
+</body></html>

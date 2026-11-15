@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><title>App cálida · Hoy</title>
+<meta name="viewport" content="width=390">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800;900&display=swap" rel="stylesheet">
+<style>
+/* App cálida: fondo tintado, tarjetas blancas muy redondeadas, UN color saturado solo en lo que se toca */
+:root{--ground:#F4ECE2;--card:#FFFFFF;--ink:#2A2420;--muted:#857A70;--act:#FF5A36}
+*{box-sizing:border-box;margin:0;padding:0}
+body{width:390px;height:844px;overflow:hidden;background:var(--ground);font-family:Nunito,system-ui,sans-serif;color:var(--ink)}
+.head{padding:58px 20px 0}
+.date{color:var(--muted);font-weight:800;font-size:14px}
+.hi{font-size:32px;font-weight:900;margin-top:2px}
+.hero{margin:18px 16px 0;background:var(--card);border-radius:28px;padding:20px;display:flex;align-items:center;gap:18px}
+.ring{width:96px;height:96px;border-radius:50%;background:conic-gradient(var(--ink) 0 240deg,#EFE6DB 240deg);display:grid;place-items:center}
+.ring div{width:72px;height:72px;border-radius:50%;background:#fff;display:grid;place-items:center;font-weight:900;font-size:26px}
+.hero p{font-weight:800;font-size:18px;line-height:1.25}.hero p span{display:block;color:var(--muted);font-size:14px}
+.list{padding:14px 16px;display:grid;gap:10px}
+.c{background:var(--card);border-radius:24px;padding:14px 14px 14px 16px;display:flex;align-items:center;gap:14px}
+.e{width:52px;height:52px;border-radius:18px;display:grid;place-items:center;font-size:26px}
+.t{flex:1;font-weight:900;font-size:17px}.t small{display:block;font-weight:700;color:var(--muted);font-size:13px}
+.chk{width:52px;height:52px;border-radius:18px;background:var(--act);color:#fff;display:grid;place-items:center;font-size:24px;font-weight:900}
+.chk.done{background:#EFE6DB;color:var(--ink)}
+.nav{position:absolute;left:0;right:0;bottom:0;height:86px;background:#fff;border-radius:28px 28px 0 0;display:flex;justify-content:space-around;padding-top:16px;font-weight:800;font-size:13px;color:var(--muted)}
+.nav .on{color:var(--act)}
+</style></head><body>
+<header class="head"><div class="date">Jueves 14 de noviembre</div><div class="hi">Hola, Ana</div></header>
+<section class="hero"><div class="ring"><div>2/3</div></div><p>Vas muy bien hoy<span>Te falta Meditar</span></p></section>
+<main class="list">
+  <div class="c"><div class="e" style="background:#2E8B5726">🏋️</div><div class="t">Gym<small>6 días seguidos</small></div><div class="chk done">✓</div></div>
+  <div class="c"><div class="e" style="background:#3A7BD526">📖</div><div class="t">Leer<small>31 días seguidos</small></div><div class="chk done">✓</div></div>
+  <div class="c"><div class="e" style="background:#8E44AD26">🧘</div><div class="t">Meditar<small>Toca hoy</small></div><div class="chk">○</div></div>
+</main>
+<nav class="nav"><span class="on">Hoy</span><span>Hábitos</span><span>Ajustes</span></nav>
+</body></html>
